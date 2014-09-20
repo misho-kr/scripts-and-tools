@@ -1,0 +1,73 @@
+---
+# Post-installation tasks to setup new VMs
+
+- hosts: all
+  vars:
+    - home_dir:             "{{ lookup('env', 'HOME') }}"
+    - use_my_public_key:    true
+    - packages:             {
+                              'all':        [ 'unzip' ],
+                              'RedHat':     [ 'emacs-nox' ],
+                              'Debian':     [ 'emacs24-nox' ]
+                            }
+
+  tasks:
+
+# --------------------------------------------------------
+#  SSH key for password-less login and sudo
+# --------------------------------------------------------
+
+  - name: Add predefined RSA public to SSH authorized keys 
+    when: not use_my_public_key
+    authorized_key: state=present user={{ ansible_user_id }}
+                    key="{{ item }}" manage_dir=yes
+    with_file:
+      - files/id_rsa.pub
+
+  - name: Add current user's RSA public key to SSH authorized keys
+    when: use_my_public_key
+    authorized_key: state=present user={{ ansible_user_id }}
+                    key="{{ lookup('file', '{{ home_dir }}/.ssh/id_rsa.pub') }}"
+                    manage_dir=yes
+
+# --------------------------------------------------------
+#  bash profile and other config
+# --------------------------------------------------------
+
+  - name: Add to profile folder
+    sudo: yes
+    copy: src=files/devenv.sh dest=/etc/profile.d/
+
+  - name: Setup emacs files and libraries
+    synchronize: src=files/emacs.d dest=.
+
+  - name: Rename folder with emacs configuration and library files
+    command: mv emacs.d .emacs.d
+
+# --------------------------------------------------------
+#  software packages installation
+# --------------------------------------------------------
+
+  - name: Install software packages part 1 (with yum)
+    sudo: yes
+    yum: name={{ item }} state=present
+    when: ansible_pkg_mgr == "yum"
+    with_items: packages.all
+
+  - name: Install software packages part 1 (with apt)
+    sudo: yes
+    yum: name={{ item }} state=latest update_cache=yes
+    when: ansible_pkg_mgr == "apt"
+    with_items: packages.all
+
+  - name: Install software packages part 2 (with yum)
+    sudo: yes
+    yum: name={{ item }} state=present
+    when: ansible_pkg_mgr == "yum"
+    with_items: packages[ ansible_os_family ]
+
+  - name: Install software packages part 2 (with apt)
+    sudo: yes
+    yum: name={{ item }} state=latest update_cache=yes
+    when: ansible_pkg_mgr == "apt"
+    with_items: packages[ ansible_os_family ]
