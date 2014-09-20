@@ -13,21 +13,23 @@
 
   tasks:
 
+  - debug: msg="HOME-DIR => {{ home_dir }}"
+
 # --------------------------------------------------------
 #  SSH key for password-less login and sudo
 # --------------------------------------------------------
 
   - name: Add predefined RSA public to SSH authorized keys 
-    when: not use_my_public_key
+    when: not use_my_public_key | bool
     authorized_key: state=present user={{ ansible_user_id }}
                     key="{{ item }}" manage_dir=yes
     with_file:
       - files/id_rsa.pub
 
   - name: Add current user's RSA public key to SSH authorized keys
-    when: use_my_public_key
+    when: use_my_public_key | bool
     authorized_key: state=present user={{ ansible_user_id }}
-                    key="{{ lookup('file', '{{ home_dir }}/.ssh/id_rsa.pub') }}"
+                    key="{{ lookup('file', home_dir+"/.ssh/id_rsa.pub" ) }}"
                     manage_dir=yes
 
 # --------------------------------------------------------
