@@ -2,18 +2,89 @@
 # Post-installation tasks to setup new VMs
 
 - hosts: all
+  remote_user: root
+
   vars:
     - home_dir:             "{{ lookup('env', 'HOME') }}"
+    - nonroot_user:         "{{ lookup('env', 'USERNAME') }}"
     - use_my_public_key:    true
-    - packages:             {
-                              'all':        [ 'unzip' ],
-                              'RedHat':     [ 'emacs-nox' ],
-                              'Debian':     [ 'emacs24-nox' ]
-                            }
+    - packages:
+        'all':        [ 'unzip', 'pam_ssh_agent_auth' ]
+        'RedHat':     [ 'emacs-nox' ]
+        'Debian':     [ 'emacs24-nox' ]
 
   tasks:
-
   - debug: msg="HOME-DIR => {{ home_dir }}"
+
+# --------------------------------------------------------
+#  software packages installation
+# --------------------------------------------------------
+
+  - name: Install software packages (with yum)
+    yum: name={{ item }} state=present
+    when: ansible_pkg_mgr == "yum"
+    with_items: packages.all + packages[ ansible_os_family ]
+
+  - name: Install software packages (with apt)
+    yum: name={{ item }} state=latest update_cache=yes
+    when: ansible_pkg_mgr == "apt"
+    with_items: packages.all + packages[ ansible_os_family ]
+
+# --------------------------------------------------------
+#  SUDO setup
+# --------------------------------------------------------
+
+  - name: Copy file to sudoers.d
+    copy: src={{ item }} dest=/etc/sudoers.d/
+    with_items:
+    - files/50-defaults
+
+  - name: Create file in sudoers.d to enable nonroor user to run sudo
+    template: dest=/etc/sudoers.d/60-user src=templates/60-user.j2
+
+  - name: Set correct file permissions to new files sudoers.d
+    file: name=/etc/sudoers.d/{{ item }} mode=600
+    with_items:
+      - 50-defaults
+      - 60-user
+
+  - name: Enable ssh authorization for sudo
+    lineinfile: dest=/etc/pam.d/sudo insertbefore="^auth"
+                line="auth sufficient pam_ssh_agent_auth.so file=%h/.ssh/authorized_keys"
+                state=present
+
+# --------------------------------------------------------
+#  SSH setup
+# --------------------------------------------------------
+
+  - name: Disable root SSH access
+    lineinfile: dest=/etc/ssh/sshd_config state=present
+                regexp="^PermitRootLogin"
+                line="PermitRootLogin no"
+    notify:
+      - restart sshd
+ 
+  - name: Disable SSH password authentication
+    lineinfile: dest=/etc/ssh/sshd_config state=present
+                regexp="^PasswordAuthentication"
+                line="PasswordAuthentication no"
+    notify:
+      - restart sshd
+
+  - name: Disable SSH GSS API authentication
+    lineinfile: dest=/etc/ssh/sshd_config state=present
+                regexp="^GSSAPIAuthentication"
+                line="GSSAPIAuthentication no"
+    notify:
+      - restart sshd
+
+# --------------------------------------------------------
+#  User account
+# --------------------------------------------------------
+
+  - name: Add non-root user account
+    user: name={{ nonroot_user }}
+          comment="Non-root account for remote operations"
 
 # --------------------------------------------------------
 #  SSH key for password-less login and sudo
@@ -21,55 +92,49 @@
 
   - name: Add predefined RSA public to SSH authorized keys 
     when: not use_my_public_key | bool
-    authorized_key: state=present user={{ ansible_user_id }}
-                    key="{{ item }}" manage_dir=yes
+    authorized_key: state=present user={{ nonroot_user }}
+                    key="{{ item }}"
+                    manage_dir=yes
     with_file:
       - files/id_rsa.pub
 
   - name: Add current user's RSA public key to SSH authorized keys
     when: use_my_public_key | bool
-    authorized_key: state=present user={{ ansible_user_id }}
-                    key="{{ lookup('file', home_dir+"/.ssh/id_rsa.pub" ) }}"
+    authorized_key: state=present user={{ nonroot_user }}
+                    key="{{ lookup('file', home_dir + "/.ssh/id_rsa.pub" ) }}"
                     manage_dir=yes
 
 # --------------------------------------------------------
-#  bash profile and other config
+#  User settings
 # --------------------------------------------------------
 
-  - name: Add to profile folder
-    sudo: yes
+  - name: Add to global profile folder
     copy: src=files/devenv.sh dest=/etc/profile.d/
 
+  - name: Cleanup old/stale files and folders
+    sudo: yes
+    sudo_user: "{{ nonroot_user }}"
+    file: state=absent name={{ item }}
+    with_items:
+      - .emacs.d
+      - emacs.d
+
   - name: Setup emacs files and libraries
-    synchronize: src=files/emacs.d dest=.
+#    sudo: yes
+#    sudo_user: "{{ nonroot_user }}"
+    synchronize: src=files/emacs.d dest=. rsync_path="sudo -u {{ nonroot_user }} rsync"
 
   - name: Rename folder with emacs configuration and library files
+    sudo: yes
+    sudo_user: "{{ nonroot_user }}"
     command: mv emacs.d .emacs.d
 
 # --------------------------------------------------------
-#  software packages installation
+#  Handlers
 # --------------------------------------------------------
 
-  - name: Install software packages part 1 (with yum)
-    sudo: yes
-    yum: name={{ item }} state=present
-    when: ansible_pkg_mgr == "yum"
-    with_items: packages.all
+  handlers:
+  - name: restart sshd
+    service: name=sshd state=restarted
 
-  - name: Install software packages part 1 (with apt)
-    sudo: yes
-    yum: name={{ item }} state=latest update_cache=yes
-    when: ansible_pkg_mgr == "apt"
-    with_items: packages.all
-
-  - name: Install software packages part 2 (with yum)
-    sudo: yes
-    yum: name={{ item }} state=present
-    when: ansible_pkg_mgr == "yum"
-    with_items: packages[ ansible_os_family ]
-
-  - name: Install software packages part 2 (with apt)
-    sudo: yes
-    yum: name={{ item }} state=latest update_cache=yes
-    when: ansible_pkg_mgr == "apt"
-    with_items: packages[ ansible_os_family ]
+- include: site2.yml sudo=yes sudo_user="{{ nonroot_user }}"
