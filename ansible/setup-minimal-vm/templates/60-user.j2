@@ -1,7 +1,7 @@
 # -------------------------------------------------------------------- #
-# Let {{ nonroot_user }} do software installations, start and stop services
+# Let << {{ nonroot_user }} >> do any sudo operations
 # -------------------------------------------------------------------- #
 
-{{ nonroot_user }}  ALL=SOFTWARE, SERVICES, SERVICES2
+{{ nonroot_user }}  ALL=(ALL)       ALL
 
 # -------------------------------------------------------------------- #
