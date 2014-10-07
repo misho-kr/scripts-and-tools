@@ -1,65 +1,26 @@
 ---
-# Post-installation tasks to setup new VMs
-#
 # ----------------------------------------------------------------------
-#  Case 1: (non-root) user account does not exist
+#  Case 1: user account does not exist
 # ----------------------------------------------------------------------
-#
 
 - hosts: all
   remote_user: root
-
-  vars:
-    - home_dir:             "{{ lookup('env', 'HOME') }}"
-    - nonroot_user:         "{{ lookup('env', 'USERNAME') }}"
-    - nonroot_user_passwd:  "$6$hzbTpnwW$cwNuR7jvCIbr1x/u8f5Z3eID21tIj.HL45EOn0l88.r5XDXxX5lFnRAHosY.zdXbE0QNTwQKwtMdOYPiqV3Pd/"
-    - use_my_public_key:    true
-
-  tasks:
 
 # --------------------------------------------------------
 #  Create user account
 # --------------------------------------------------------
 
-  - name: Add non-root user account
-    user: name={{ nonroot_user }} password={{ nonroot_user_passwd }}
-          comment="Non-root account for remote operations"
+  pre_tasks:
+
+    - name: Add non-root user account
+      user: name={{ nonroot_user }} password={{ nonroot_user_passwd }}
+            comment="Non-root account for remote operations"
 
 # --------------------------------------------------------
-
-  - name: Add predefined RSA public for password-less login
-    when: not use_my_public_key | bool
-    authorized_key: state=present user={{ nonroot_user }}
-                    key="{{ item }}"
-                    manage_dir=yes
-    with_file:
-      - files/id_rsa.pub
-
-  - name: Add RSA public key of current user for password-less login
-    when: use_my_public_key | bool
-    authorized_key: state=present user={{ nonroot_user }}
-                    key="{{ lookup('file', home_dir + "/.ssh/id_rsa.pub" ) }}"
-                    manage_dir=yes
-
-# --------------------------------------------------------
-#  SUDO setup
+#  Grant priviliges
 # --------------------------------------------------------
 
-  - name: Copy file to sudoers.d
-    copy: src={{ item }} dest=/etc/sudoers.d/
-    with_items:
-    - files/50-defaults
+  roles:
 
-  - name: Create file in sudoers.d to enable nonroor user to run sudo
-    template: dest=/etc/sudoers.d/60-user src=templates/60-user.j2
-
-  - name: Set correct file permissions to new files sudoers.d
-    file: name=/etc/sudoers.d/{{ item }} mode=600
-    with_items:
-      - 50-defaults
-      - 60-user
-
-  - name: Enable ssh authorization for sudo
-    lineinfile: dest=/etc/pam.d/sudo insertbefore="^auth"
-                line="auth sufficient pam_ssh_agent_auth.so file=%h/.ssh/authorized_keys"
-                state=present
+    - passwordless_login
+    - sudoers

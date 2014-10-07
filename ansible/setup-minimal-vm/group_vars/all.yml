@@ -1,0 +1,8 @@
+---
+
+home_dir:             "{{ lookup('env', 'HOME') }}"
+
+nonroot_user:         "{{ lookup('env', 'USERNAME') }}"
+nonroot_user_passwd:  "$6$hzbTpnwW$cwNuR7jvCIbr1x/u8f5Z3eID21tIj.HL45EOn0l88.r5XDXxX5lFnRAHosY.zdXbE0QNTwQKwtMdOYPiqV3Pd/"
+
+use_my_public_key:    true
