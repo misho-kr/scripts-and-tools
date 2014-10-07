@@ -1,21 +1,10 @@
 ---
 # Grant sudo priviliges
 
-- name: Copy file to sudoers.d
-  copy: src={{ item }} dest=/etc/sudoers.d/
-  with_items:
-    - 50-defaults
-
 - name: Create file in sudoers.d to enable nonroor user to run sudo
-  template: dest=/etc/sudoers.d/60-user src=60-user.j2
+  template: dest=/etc/sudoers.d/60-user-{{ nonroot_user }} src=60-user.j2
 
 - name: Set correct file permissions to new files in sudoers.d/
   file: name=/etc/sudoers.d/{{ item }} mode=600
   with_items:
-    - 50-defaults
-    - 60-user
-
-- name: Enable ssh authorization for sudo
-  lineinfile: dest=/etc/pam.d/sudo insertbefore="^auth"
-              line="auth sufficient pam_ssh_agent_auth.so file=%h/.ssh/authorized_keys"
-              state=present
+    - "60-user-{{ nonroot_user }}"
