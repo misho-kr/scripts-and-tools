@@ -1,0 +1,2 @@
+
+ssh_auth_packages:       [ 'pam_ssh_agent_auth' ]

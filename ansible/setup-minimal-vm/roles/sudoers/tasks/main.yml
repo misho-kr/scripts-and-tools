@@ -1,10 +1,10 @@
 ---
 # Grant sudo priviliges
 
-- name: Create file in sudoers.d to enable nonroor user to run sudo
-  template: dest=/etc/sudoers.d/60-user-{{ nonroot_user }} src=60-user.j2
+- name: Create file in sudoers.d to enable the user to run sudo
+  template: dest=/etc/sudoers.d/60-user-{{ make_sudo_user }} src=60-user.j2
 
 - name: Set correct file permissions to new files in sudoers.d/
   file: name=/etc/sudoers.d/{{ item }} mode=600
   with_items:
-    - "60-user-{{ nonroot_user }}"
+    - "60-user-{{ make_sudo_user }}"

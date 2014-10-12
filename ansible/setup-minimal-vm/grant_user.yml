@@ -1,19 +1,18 @@
 ---
 # ----------------------------------------------------------------------
-#  Case 3: user account exist but has no sudo priviliges
+#  Case 2: user account exist but has no sudo priviliges
 # ----------------------------------------------------------------------
 
-- hosts: all
+- hosts: hosts_without_user
   remote_user: "{{ nonroot_user }}"
   su: yes
-  su_user: root
 
 # --------------------------------------------------------
-#  Update sudo priviliges
+#  Grant sudo priviliges
 # --------------------------------------------------------
 
   roles:
 
-    - { role: passwordless_login,       su: no }
-    - role: sudoers
-    - role: sudoers_extra
+    - { role: sudoers, make_sudo_user: "{{ nonroot_user }}", tags: create-sudo-user }
+    - passwordless_login
+    - sudoers_extra

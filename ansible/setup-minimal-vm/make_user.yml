@@ -3,7 +3,7 @@
 #  Case 1: user account does not exist
 # ----------------------------------------------------------------------
 
-- hosts: all
+- hosts: hosts_without_user
   remote_user: root
 
 # --------------------------------------------------------
@@ -15,13 +15,14 @@
     - name: Add non-root user account
       user: name={{ nonroot_user }} password={{ nonroot_user_passwd }}
             comment="Non-root account for remote operations"
+      tags: create-sudo-user
 
 # --------------------------------------------------------
-#  Grant priviliges
+#  Grant sudo priviliges
 # --------------------------------------------------------
 
   roles:
 
+    - { role: sudoers, make_sudo_user: "{{ nonroot_user }}", tags: create-sudo-user }
     - passwordless_login
-    - sudoers
     - sudoers_extra

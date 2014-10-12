@@ -1,0 +1,13 @@
+---
+# Software packages installation
+
+- name: Install software packages (with yum)
+  yum: name={{ item }} state=present
+  when: ansible_pkg_mgr == "yum"
+  with_items: packages.all + packages[ ansible_os_family ]
+
+- name: Install software packages (with apt)
+  yum: name={{ item }} state=latest update_cache=yes
+  when: ansible_pkg_mgr == "apt"
+  with_items: packages.all + packages[ ansible_os_family ]
+

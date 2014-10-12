@@ -6,7 +6,7 @@
                   key="{{ item }}"
                   manage_dir=yes
   with_file:
-    - files/id_rsa.pub
+    - id_rsa.pub
 
 - name: Add RSA public key of current user for password-less login
   when: use_my_public_key | bool

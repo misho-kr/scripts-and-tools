@@ -1,0 +1,16 @@
+---
+
+- name: Enable ssh authorization for sudo
+  lineinfile: dest=/etc/pam.d/sudo insertbefore="^auth"
+              line="auth sufficient pam_ssh_agent_auth.so file=%h/.ssh/authorized_keys"
+              state=present
+
+- name: Install ssh authorization lib (with yum)
+  yum: name={{ item }} state=present
+  when: ansible_pkg_mgr == "yum"
+  with_items: ssh_auth_packages
+
+- name: Install software packages (with apt)
+  yum: name={{ item }} state=latest update_cache=yes
+  when: ansible_pkg_mgr == "apt"
+  with_items: ssh_auth_packages

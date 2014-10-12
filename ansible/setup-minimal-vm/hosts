@@ -2,7 +2,16 @@
 # 				    New VMs
 # -----------------------------------------------------------------------
 
-[all]
+[all:children]
+hosts_without_user
+grant_user
+update_user
+
+[hosts_without_user]
+
+[grant_user]
+
+[update_user]
 
 # -----------------------------------------------------------------------
 # eof

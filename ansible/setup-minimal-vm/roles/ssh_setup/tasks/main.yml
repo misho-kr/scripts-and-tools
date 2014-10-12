@@ -1,0 +1,23 @@
+---
+# Modify sshd server settings
+
+- name: Disable root SSH access
+  lineinfile: dest=/etc/ssh/sshd_config state=present
+              regexp="^PermitRootLogin"
+              line="PermitRootLogin no"
+  notify:
+    - restart sshd
+ 
+- name: Disable SSH password authentication
+  lineinfile: dest=/etc/ssh/sshd_config state=present
+              regexp="^PasswordAuthentication"
+              line="PasswordAuthentication no"
+  notify:
+    - restart sshd
+
+- name: Disable SSH GSS API authentication
+  lineinfile: dest=/etc/ssh/sshd_config state=present
+              regexp="^GSSAPIAuthentication"
+              line="GSSAPIAuthentication no"
+  notify:
+    - restart sshd

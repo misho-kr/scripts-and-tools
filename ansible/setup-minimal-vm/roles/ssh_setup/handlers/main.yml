@@ -1,0 +1,5 @@
+---
+# Post-actions to execute after the role tasks are completed
+
+- name: restart sshd
+  service: name=sshd state=restarted

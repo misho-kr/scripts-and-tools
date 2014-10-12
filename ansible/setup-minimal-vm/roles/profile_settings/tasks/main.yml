@@ -1,0 +1,6 @@
+---
+# profile settings, setup files and more
+
+- include:   user_settings.yml
+- include:   global_settings.yml
+  sudo: yes
