@@ -6,8 +6,13 @@
   when: ansible_pkg_mgr == "yum"
   with_items: packages.all + packages[ ansible_os_family ]
 
+- name: Add APT repository (needed for the subsequent apt-install)
+  apt_repository: repo="{{ item }}"
+  with_items: deb_repos
+  when: ansible_pkg_mgr == "apt"
+
 - name: Install software packages (with apt)
-  yum: name={{ item }} state=latest update_cache=yes
+  apt: name={{ item }} state=latest update_cache=yes
   when: ansible_pkg_mgr == "apt"
   with_items: packages.all + packages[ ansible_os_family ]
 

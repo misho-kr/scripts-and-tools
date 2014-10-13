@@ -1,2 +1,7 @@
 
-ssh_auth_packages:       [ 'pam_ssh_agent_auth' ]
+ssh_auth_packages: {
+  'RedHat':     [ 'pam_ssh_agent_auth' ],
+  'Debian':     [ 'pam-ssh-agent-auth' ],
+}
+
+ssh_auth_repos:          [ 'ppa:cpick/pam-ssh-agent-auth' ]

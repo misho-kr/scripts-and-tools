@@ -1,5 +1,6 @@
 ---
 # Post-actions to execute after the role tasks are completed
 
-- name: restart sshd
-  service: name=sshd state=restarted
+- name: restart ssh service
+  service: name={{ item }} state=restarted
+  with_items: ssh_service_name[ {{ ansible_os_family }} ]

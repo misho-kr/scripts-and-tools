@@ -1,0 +1,5 @@
+
+ssh_service_name: {
+    'RedHat':     'sshd',
+    'Debian':     'ssh'
+}

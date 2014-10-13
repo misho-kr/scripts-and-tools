@@ -8,8 +8,11 @@ alias ltr='ls -ltr'
 
 # alias sv='${HOME}/bin/set_dyn_view.pl'
 
+[[ -x /usr/bin/emacs24-nox ]]	 && alias enox='emacs24-nox'
+[[ -x /usr/bin/emacs-24.3-nox ]] && alias enox='emacs-24.3-nox'
+alias e='enox'
+
 alias d='docker'
-alias e='emacs -nw'
 alias g='git'
 alias vir='vi -R'
 

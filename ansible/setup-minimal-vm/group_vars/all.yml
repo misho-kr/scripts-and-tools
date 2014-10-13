@@ -7,8 +7,9 @@ nonroot_user_passwd:  "$6$hzbTpnwW$cwNuR7jvCIbr1x/u8f5Z3eID21tIj.HL45EOn0l88.r5X
 
 use_my_public_key:    true
 
+deb_repos:      [ 'ppa:cpick/pam-ssh-agent-auth' ]
 packages: {
-  'all':        [ 'unzip', 'pam_ssh_agent_auth' ],
-  'RedHat':     [ 'emacs-nox' ],
-  'Debian':     [ 'emacs24-nox' ],
+  'all':        [ 'unzip' ],
+  'RedHat':     [ 'emacs-nox', 'pam_ssh_agent_auth' ],
+  'Debian':     [ 'emacs24-nox', 'pam-ssh-agent-auth' ],
 }

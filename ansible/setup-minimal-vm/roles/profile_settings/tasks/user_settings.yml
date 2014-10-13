@@ -1,10 +1,11 @@
 ---
 
-- name: Cleanup old/stale files and folders
+- name: Cleanup old/stale/unneeded files and folders
   file: state=absent name={{ item }}
   with_items:
     - .emacs.d
     - emacs.d
+    - .emacs
 
 - name: Setup emacs files and libraries
   synchronize: src=emacs.d dest=.
