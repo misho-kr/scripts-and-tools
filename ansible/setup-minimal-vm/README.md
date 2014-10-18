@@ -60,13 +60,65 @@ the same predicable results.
 
 ## Finally, the Ansible playbooks
 
+Yes, there are several playbooks. The goal was to have one (smart) playbook
+that can detect each platform on which it is running and adjust the
+deployment strategy accordingly. The end of this document expounds on the
+reasons that goal is not achiavable (yet).
+
+So there are two main playbooks:
+
+* Create, or update, a user account so that all hosts have identical login
+procedure and execution privileges
+* Main playbook to carry out all installation and configuration steps
+
+#### Make User
+
+The use case for this playbook is hosts that have only root account that
+allows direct ssh login. It will create regular (non-root) user account
+and will grant "sudo" privileges.
+
+```bash
+$ ansible-playbook make_user.yml -i hosts -t create-sudo-user -k
+$ ansible-playbook make_user.yml -i hosts -t create-sudo-user -e nonroot_user=userA -k
+```
+
+#### Grant User
+
+This playbook can be run if non-root account already exists. That account
+will get "sudo" privileges.
+
+```bash
+$ ansible-playbook grant_user.yml -i hosts -k --ask-su-pass
+$ ansible-playbook grant_user.yml -i hosts -e nonroot_user=userA -k --ask-su-pass
+```
+
+#### Main -- site.yml
+
+When all hosts have non-root account with sudo privileges the main
+playbook can be executed. The action list includes at least the following
+items:
+
+* Enable password-less login and removes the password for the non-root account
+* Disable all forms of authentications with the ssh server, and leave
+only public key authentication
+* Configure [password-less sudo authentication](http://pamsshagentauth.sourceforge.net),
+when the user has logged in with ssh and public key authentication
+* Install limited set of software packages
+
+```bash
+$ ansible-playbook site.yml -i hosts
+```
 
 #### Inventory list
 
 * Defines all hosts that will be targets for the playbooks
-* Splits the hosts into groups that have to be treated differently, because
-there operations can be carried out on some on some Lunux distros but not
-on others, or have differences across different flavors of Linux
+* Splits the hosts into groups that have to be treated differently
+
+The provided [hosts](hosts) file defines 3 groups of hosts depending on
+the presence or absence of regular (non-root) account:
+
+* Account does not exist
+* Account exists but does not have "sudo" privileges
 
 ## TODO
 
