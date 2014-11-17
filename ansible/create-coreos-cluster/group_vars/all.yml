@@ -1,0 +1,3 @@
+---
+
+local_vm_image_dir:             "{{ playbook_dir }}/vm_image.dir"

@@ -1,0 +1,38 @@
+---
+# ----------------------------------------------------------
+#                Create cluster of CoreOS VM
+# ----------------------------------------------------------
+
+- hosts: 127.0.0.1
+  connection: local
+  tasks:
+
+    - include:  tasks/local_setup.yml
+
+# ----------------------------------------------------------
+#  1. Download VM image
+# ----------------------------------------------------------
+
+- hosts: download_host
+  roles:
+
+    - { role: download_image, tag: download }
+
+# ----------------------------------------------------------
+#  2. Create VMs
+# ----------------------------------------------------------
+
+- hosts: provision_host
+
+  pre_tasks:
+
+    - name: discover vm image name
+      command: cat "{{ local_vm_image_dir }}"/vm_image_name.txt
+      register: this_vm_image_name
+
+  roles:
+
+    - { role: disk_partition, vm_image_name: "{{ this_vm_image_name.stdout }}" }
+
+#    - cloud_init
+#    - virtual_machine

@@ -1,0 +1,4 @@
+---
+# Create disk partitions for the virtual machines
+
+- include:    upload.yml
