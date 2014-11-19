@@ -2,3 +2,7 @@
 # Create disk partitions for the virtual machines
 
 - include:    upload.yml
+
+- include:    create_fs.yml
+  sudo: yes
+  when: vm_image_storage == "fs"

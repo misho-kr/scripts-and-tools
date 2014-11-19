@@ -16,7 +16,7 @@
 - hosts: download_host
   roles:
 
-    - { role: download_image, tag: download }
+    - { role: download_image, tags: download }
 
 # ----------------------------------------------------------
 #  2. Create VMs
@@ -28,11 +28,16 @@
 
     - name: discover vm image name
       command: cat "{{ local_vm_image_dir }}"/vm_image_name.txt
-      register: this_vm_image_name
+      register: saved_vm_image_name
+
+  vars:
+
+    vm_image_name_compressed:   "{{ saved_vm_image_name.stdout }}"
+    vm_image_name:              '{{ vm_image_name_compressed | regex_replace(".bz2$", "") }}'
 
   roles:
 
-    - { role: disk_partition, vm_image_name: "{{ this_vm_image_name.stdout }}" }
+    - { role: disk_partition,  }
 
 #    - cloud_init
 #    - virtual_machine
