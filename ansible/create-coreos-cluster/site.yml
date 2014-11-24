@@ -38,6 +38,6 @@
   roles:
 
     - { role: disk_partition,  }
+    - cloud_init
 
-#    - cloud_init
 #    - virtual_machine
