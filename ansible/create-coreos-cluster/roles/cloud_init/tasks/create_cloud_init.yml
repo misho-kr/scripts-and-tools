@@ -1,0 +1,11 @@
+---
+# Create cloud-init files for all VMs
+
+- name: Create directory for cloud-init files
+  file: name="{{ cloud_init_dir }}/configdrive-vm-{{ item }}/openstack/latest"
+        state=directory
+  with_sequence: count={{ vm_count }}
+
+- template: src=cloud-init.j2
+            dest="{{ cloud_init_dir }}/configdrive-vm-{{ item }}/openstack/latest/user_data"
+  with_sequence: count={{ vm_count }}
