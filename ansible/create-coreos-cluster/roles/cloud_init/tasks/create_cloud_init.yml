@@ -1,9 +1,13 @@
 ---
 # Create cloud-init files for all VMs
 
+# - name: remove old directory for cloud-init files
+#   file: name="{{ cloud_init_dir }}" state=absent
+
 - name: Create directory for cloud-init files
   file: name="{{ cloud_init_dir }}/configdrive-vm-{{ item }}/openstack/latest"
         state=directory
+        setype="svirt_image_t"
   with_sequence: count={{ vm_count }}
 
 - template: src=cloud-init.j2

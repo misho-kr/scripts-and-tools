@@ -25,4 +25,5 @@
 
 - name: create remaining vm images
   command: cp "{{ vm_image_storage_fs_dir }}/vm-1.img" "{{ vm_image_storage_fs_dir }}/vm-{{ item }}.img"
+  when: vm_count > 1
   with_sequence: start=2 end={{ vm_count }}

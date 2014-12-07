@@ -37,7 +37,10 @@
 
   roles:
 
-    - { role: disk_partition,  }
-    - cloud_init
+    - { role: disk_partition,     tags: disks }
+    - { role: cloud_init,         tags: init }
+    - { role: virtual_machine,    tags: vms }
 
-#    - virtual_machine
+# ----------------------------------------------------------
+# eof
+#
