@@ -5,4 +5,3 @@ vm_files_dir:           /var/lib/libvirt/images/coreos
 use_my_public_key:      true
 my_public_key_file:     ".ssh/id_rsa.pub"
 
-home_dir:               "{{ lookup('env', 'HOME') }}"

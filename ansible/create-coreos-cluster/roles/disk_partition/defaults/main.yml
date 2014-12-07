@@ -1,9 +1,7 @@
 ---
 
 # plain filesystem
-vm_image_storage:           "fs"            
+vm_image_storage:           "fs"      
+
 # logical volume manager
 # vm_image_storage:         "lvm"
-
-vm_image_storage_fs_dir:    /var/lib/libvirt/images/coreos
-

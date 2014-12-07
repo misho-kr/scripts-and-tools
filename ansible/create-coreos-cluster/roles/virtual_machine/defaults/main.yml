@@ -1,0 +1,5 @@
+---
+
+cloud_init_dir:     "{{ vm_files_dir }}"
+
+vm_memory:          524288
