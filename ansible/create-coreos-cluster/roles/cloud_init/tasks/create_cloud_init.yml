@@ -12,4 +12,5 @@
 
 - template: src=cloud-init.j2
             dest="{{ cloud_init_dir }}/configdrive-vm-{{ item }}/openstack/latest/user_data"
+            setype="svirt_image_t"
   with_sequence: count={{ vm_count }}
