@@ -2,7 +2,7 @@
   <name>coreos-{{ item }}</name>
   <memory unit='KiB'>{{ vm_memory }}</memory>
   <currentMemory unit='KiB'>{{ vm_memory }}</currentMemory>
-  <vcpu placement='static'>1</vcpu>
+  <vcpu placement='static'>{{ vm_cpu_count }}</vcpu>
   <os>
     <type arch='x86_64' machine='pc'>hvm</type>
     <boot dev='hd'/>
@@ -20,7 +20,7 @@
     <emulator>/usr/bin/qemu-kvm</emulator>
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2'/>
-      <source file='{{ vm_image_storage_fs_dir }}/vm-{{ item }}.img'/>
+      <source file='{{ vm_image_dir }}/vm-{{ item }}.img'/>
       <target dev='vda' bus='virtio'/>
     </disk>
     <controller type='usb' index='0'>
@@ -35,7 +35,7 @@
       <mac address='52:54:00:fe:b3:c0'/>
       <source dev='eth0' mode='bridge'/>
 -->
-      <source network='VM_net_122'/>
+      <source network='{{ vm_network_name }}'/>
       <model type='virtio'/>
     </interface>
     <serial type='pty'>
