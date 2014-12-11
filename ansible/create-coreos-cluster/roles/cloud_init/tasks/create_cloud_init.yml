@@ -14,3 +14,8 @@
             dest="{{ cloud_init_dir }}/configdrive-vm-{{ item }}/openstack/latest/user_data"
             setype="svirt_image_t"
   with_sequence: count={{ vm_count }}
+
+- name: set SELinux attributes to cloud-init directory
+  file: name="{{ cloud_init_dir }}/configdrive-vm-{{ item }}
+        setype="svirt_image_t" recurse=yes
+  when: ansible_selinux.status = "enabled" and ansible_selinux.mode == "enforcing"
