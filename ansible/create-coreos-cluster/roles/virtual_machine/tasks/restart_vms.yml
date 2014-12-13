@@ -1,0 +1,12 @@
+---
+# Restart Virtual Machines
+
+- name: restart virtual machines, part 1 (shutdown)
+  virt: name="coreos-{{ item }}"
+        state=shutdown
+  with_sequence: count={{ vm_count }}
+
+- name: restart virtual machines, part 2 (re-start)
+  virt: name="coreos-{{ item }}"
+        state=running
+  with_sequence: count={{ vm_count }}

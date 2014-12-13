@@ -1,6 +1,6 @@
 ---
 
-vm_files_dir:           /var/lib/libvirt/images/coreos
+cloud_init_dir:         "{{ vm_image_storage_fs_dir }}"
 
 use_my_public_key:      true
 my_public_key_file:     ".ssh/id_rsa.pub"
