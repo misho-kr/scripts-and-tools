@@ -1,5 +1,7 @@
 ---
 
+home_dir:                 "{{ lookup('env', 'HOME') }}"
+
 vms_by_count:             True
 vm_count:                 1
 
@@ -8,5 +10,3 @@ vms_by_name:              False
 local_vm_image_dir:       "{{ playbook_dir }}/vm_image.dir"
 
 vm_image_storage_fs_dir:  /var/lib/libvirt/images/coreos
-
-home_dir:                 "{{ lookup('env', 'HOME') }}"

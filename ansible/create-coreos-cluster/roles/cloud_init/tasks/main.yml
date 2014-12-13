@@ -4,5 +4,4 @@
 - include:    create_cloud_init.yml
   sudo: yes
   vars:
-    cloud_init_dir:     "{{ vm_files_dir }}"
     public_ssh_key:     "{{ lookup('file', home_dir + '/' + my_public_key_file ) }}"
