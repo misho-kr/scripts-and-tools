@@ -1,0 +1,8 @@
+---
+# Shutdown
+
+- name: shutdown coreos virtual machines
+  virt: name="{{ item.key }}"
+        command=shutdown
+  when: item.key | match("coreos-*") and item.value.state != "shutdown"
+  with_dict: vms

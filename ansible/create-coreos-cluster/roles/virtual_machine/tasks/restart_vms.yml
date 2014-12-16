@@ -6,7 +6,23 @@
         state=shutdown
   with_sequence: count={{ vm_count }}
 
-- name: restart virtual machines, part 2 (re-start)
+# Pause for 5 seconds to shutdown all vms
+- pause: seconds=5
+
+- name: query status of virtual machines (after shutdown)
+  virt: name="coreos-{{ item }}"
+        command=status
+  with_sequence: count={{ vm_count }}
+
+- name: restart virtual machines, part 2 (start again)
   virt: name="coreos-{{ item }}"
         state=running
+  with_sequence: count={{ vm_count }}
+
+# Pause for 15 seconds to start up all vms
+- pause: seconds=15
+
+- name: query status of virtual machines (after restart)
+  virt: name="coreos-{{ item }}"
+        command=status
   with_sequence: count={{ vm_count }}

@@ -19,3 +19,8 @@
         state=running
   with_sequence: count={{ vm_count }}
   register: new_vm
+
+- name: query status of virtual machines
+  virt: name="coreos-{{ item }}"
+        command=status
+  with_sequence: count={{ vm_count }}
