@@ -1,0 +1,43 @@
+---
+# ----------------------------------------------------------
+#                Administrate cluster of CoreOS VM
+# ----------------------------------------------------------
+
+# ----------------------------------------------------------
+#  2. Create VMs
+# ----------------------------------------------------------
+
+- hosts: provision_host
+
+  pre_tasks:
+
+    - name: get list of all virtual machines
+      virt: command=list_vms name="coreos-1"
+      tags: [ 'list', 'status', 'start', 'shutdown' ]
+      register: virt_vms
+
+    - name: get info of all virtual machines
+      virt: command=info
+      tags: [ 'info', 'start', 'shutdown' ]
+      register: virt_info
+
+  tasks:
+
+    - debug: var=virt_vms.list_vms
+      tags: list
+
+    - debug: var=virt_info
+      tags: info
+
+    - include: tasks/status.yml vms={{ virt_vms.list_vms }}
+      tags: status
+
+    - include: tasks/start.yml vms={{ virt_info }}
+      tags: start
+
+    - include: tasks/shutdown.yml vms={{ virt_info }}
+      tags: shutdown
+
+# ----------------------------------------------------------
+# eof
+#
