@@ -1,0 +1,8 @@
+---
+# Destroy
+
+- name: destroy coreos virtual machines
+  virt: name="{{ item }}"
+        command=undefine
+  when: item | match("coreos-*")
+  with_items: vms

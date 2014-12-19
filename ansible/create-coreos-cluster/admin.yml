@@ -16,18 +16,18 @@
       tags: [ 'list', 'status', 'start', 'shutdown' ]
       register: virt_vms
 
+    - debug: var=virt_vms.list_vms
+      tags: list
+
     - name: get info of all virtual machines
       virt: command=info
       tags: [ 'info', 'start', 'shutdown' ]
       register: virt_info
 
-  tasks:
-
-    - debug: var=virt_vms.list_vms
-      tags: list
-
     - debug: var=virt_info
       tags: info
+
+  tasks:
 
     - include: tasks/status.yml vms={{ virt_vms.list_vms }}
       tags: status

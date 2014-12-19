@@ -1,0 +1,21 @@
+---
+# ----------------------------------------------------------
+#                Destroy cluster of CoreOS VM
+# ----------------------------------------------------------
+
+- hosts: provision_host
+
+  pre_tasks:
+
+    - name: get list of all virtual machines
+      virt: command=list_vms name="coreos-1"
+      register: virt_vms
+
+  tasks:
+
+    - debug: var=virt_vms.list_vms
+    - include: tasks/destroy.yml vms={{ virt_vms.list_vms }}
+
+# ----------------------------------------------------------
+# eof
+#
