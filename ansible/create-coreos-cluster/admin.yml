@@ -13,7 +13,7 @@
 
     - name: get list of all virtual machines
       virt: command=list_vms name="coreos-1"
-      tags: [ 'list', 'status', 'start', 'shutdown' ]
+      tags: [ 'list', 'status', 'start', 'shutdown', 'restart' ]
       register: virt_vms
 
     - debug: var=virt_vms.list_vms
@@ -21,7 +21,7 @@
 
     - name: get info of all virtual machines
       virt: command=info
-      tags: [ 'info', 'start', 'shutdown' ]
+      tags: [ 'info', 'start', 'shutdown', 'restart' ]
       register: virt_info
 
     - debug: var=virt_info
@@ -32,11 +32,15 @@
     - include: tasks/status.yml vms={{ virt_vms.list_vms }}
       tags: status
 
-    - include: tasks/start.yml vms={{ virt_info }}
-      tags: start
-
     - include: tasks/shutdown.yml vms={{ virt_info }}
-      tags: shutdown
+      tags: [ 'shutdown', 'restart' ]
+
+    # Pause for N seconds to shutdown all vms
+    - pause: seconds={{ vm_restart_pause }}
+      tags: restart
+
+    - include: tasks/start.yml vms={{ virt_info }}
+      tags: [ 'start', 'restart' ]
 
 # ----------------------------------------------------------
 # eof
