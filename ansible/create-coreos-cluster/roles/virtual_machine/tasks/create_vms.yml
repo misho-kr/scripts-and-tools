@@ -20,6 +20,9 @@
   with_sequence: count={{ vm_count }}
   register: new_vm
 
+# Pause for N seconds to create and boot up all vms
+- pause: seconds={{ vm_create_pause }}
+
 - name: query status of virtual machines
   virt: name="coreos-{{ item }}"
         command=status

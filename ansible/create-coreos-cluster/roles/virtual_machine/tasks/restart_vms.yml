@@ -20,7 +20,7 @@
   with_sequence: count={{ vm_count }}
 
 # Pause for N seconds to start up all vms
-- pause: seconds={{ vm_restart_pause }}
+- pause: seconds={{ vm_startup_pause }}
 
 - name: query status of virtual machines (after restart)
   virt: name="coreos-{{ item }}"
