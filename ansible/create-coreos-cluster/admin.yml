@@ -36,10 +36,19 @@
       tags: [ 'shutdown', 'restart' ]
 
     # Pause for N seconds to shutdown all vms
-    - pause: seconds={{ vm_restart_pause }}
+    - pause: seconds={{ vm_shutdown_pause }}
       tags: restart
 
+    - name: get info of all virtual machines (after shutdown command)
+      virt: command=info
+      tags: restart
+      register: virt_info
+
     - include: tasks/start.yml vms={{ virt_info }}
+      tags: [ 'start', 'restart' ]
+
+    # Pause for N seconds to start up all vms
+    - pause: seconds={{ vm_startup_pause }}
       tags: [ 'start', 'restart' ]
 
 # ----------------------------------------------------------

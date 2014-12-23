@@ -9,7 +9,7 @@
         state=directory
   with_sequence: count={{ vm_count }}
 
-- template: src=cloud-init.j2
+- template: src="{{ cloud_init_profile }}.j2"
             dest="{{ cloud_init_dir }}/configdrive-vm-{{ item }}/openstack/latest/user_data"
   with_sequence: count={{ vm_count }}
 

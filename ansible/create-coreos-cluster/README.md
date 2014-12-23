@@ -25,7 +25,7 @@ _Note: At this time only the first method (by vm count) is implemented._
 Follow these simple steps:
 
 1. Download (or clone) this repo
-1. Update the __vm_count__ variable in [group_vars/all.yml](group_vars/all.yml) file to define the number CoreOS servers in the cluster (or pass the variable setting to te playbook at the command line)
+1. Update the __vm_count__ variable in [group_vars/all.yml](group_vars/all.yml) file to define the number CoreOS servers in the cluster (or pass the variable setting to te playbook at the command line as shown in the examples)
 1. Run the [create Ansible playbook](create.yml)
 
 ```bash
@@ -34,6 +34,29 @@ $ ansible-playbook -i hosts create.yml -e "vm_count=3"
 
 ```
 
+#### Repeated execution
+
+The playbook consists of several roles which are like seperate steps of the
+procedure to provision the cluster. Each role has tag which allows to skip
+or select for execution indivisual steps. This makes most sense for the
+_download_ role because after the CoreOS image is downloaded one time it is
+a waste of time download the same image every time the playbook is executed.
+
+```bash
+$ ansible-playbook -i hosts create.yml -e "vm_count=3" --skip-tags=download
+...
+
+```
+
+#### Options
+
+There are several playbook variables that can be used to customize the provisioned cluster:
+
+* __vm_count__ -- number of virtual machines in the cluster
+* __cloud_init_profile__
+ * __basic__ (default) -- minimum setup, just hostname and ssh keys
+ * __etcd_fleet__ -- _etcd_ and _fleet_ services are started on each VM
+ 
 #### Start up and Shutdown 
 
 ```bash
@@ -68,3 +91,6 @@ error out:
 
 * Use [Logical Volume Manager](https://www.sourceware.org/lvm2/) to create disk partitions for the disk images of the virtual machines
 * Implement method to specify the virtual machines by name in the inventory file
+* Download of CoreOS image shoould be done only if the image was not downloaded already, or if explicitly requested
+* At the end of _create_, _start_ and _restart_ commands there are pauses of fixed number of seconds to gibe the VM a chance to complete the operation. It will be better to query and status of the VMs and finish when _libvirt_ gives positive indicates.
+* Acquire new etcd discovery token automatically every time new cluster is provisioned

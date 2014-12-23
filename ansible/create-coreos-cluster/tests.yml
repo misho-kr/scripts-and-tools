@@ -1,0 +1,25 @@
+---
+# tests with << virt >>
+
+- name: manage libvirt guests
+  user: root
+  hosts: provision_host
+
+  tasks:
+
+    - name: get list of vms
+      virt: command=list_vms
+      register: virt_vms
+
+    - name: query status of virtual machines
+      virt: name="{{ item }}"
+            command=status
+      when: item | match("coreos-*")
+      with_items: virt_vms.list_vms
+
+    - group_by: key=virt_vms.list_vms
+
+- hosts: coreos-1
+  gather_facts: False
+  tasks:
+    - debug: msg="working on host -- coreos-1"
