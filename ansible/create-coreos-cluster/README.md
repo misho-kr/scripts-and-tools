@@ -93,4 +93,4 @@ error out:
 * Implement method to specify the virtual machines by name in the inventory file
 * Download of CoreOS image shoould be done only if the image was not downloaded already, or if explicitly requested
 * At the end of _create_, _start_ and _restart_ commands there are pauses of fixed number of seconds to gibe the VM a chance to complete the operation. It will be better to query and status of the VMs and finish when _libvirt_ gives positive indicates.
-* Acquire new etcd discovery token automatically every time new cluster is provisioned
+~~* Acquire new etcd discovery token automatically every time new cluster is provisioned~~

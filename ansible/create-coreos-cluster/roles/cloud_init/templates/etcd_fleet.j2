@@ -6,16 +6,20 @@ ssh_authorized_keys:
 hostname:   coreos-{{ item }}
 
 coreos:
+
   units:
     - name: etcd.service
       command: start
     - name: fleet.service
       command: start
+
   etcd:
     verbose: true
     name: coreos-{{ item }}
+
     # generate a new token for each unique cluster from https://discovery.etcd.io/new
-    discovery: https://discovery.etcd.io/your-discovery-token-here
+    discovery: {{ discovery_url }}
+
     # multi-region and multi-cloud deployments need to use $public_ipv4
     addr: coreos-{{ item }}:4001
     peer-addr: coreos-{{ item }}:7001
