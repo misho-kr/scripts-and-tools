@@ -13,8 +13,10 @@
 
   tasks:
 
-    - debug: var=virt_vms.list_vms
-    - include: tasks/destroy.yml vms={{ virt_vms.list_vms }}
+#    - debug: var=virt_vms.list_vms
+
+    - include: tasks/destroy.yml  vms={{ virt_vms.list_vms }}
+    - include: tasks/shutdown_unconditional.yml vms={{ virt_vms.list_vms }}
 
 # ----------------------------------------------------------
 # eof
