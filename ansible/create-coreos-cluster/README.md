@@ -50,13 +50,15 @@ $ ansible-playbook -i hosts create.yml -e "vm_count=3" --skip-tags=download
 
 #### Options
 
-There are several playbook variables that can be used to customize the provisioned cluster:
+These playbook variables that can be used to customize the provisioned cluster:
 
 * __vm_count__ -- number of virtual machines in the cluster
 * __cloud_init_profile__
- * __basic__ (default) -- minimum setup, just hostname and ssh keys
+ * __basic__ (default) -- minimum setup, set hostname and upload ssh keys
  * __etcd_fleet__ -- _etcd_ and _fleet_ services are started on each VM
- 
+* __discovery_token__ -- pass _etcd_ discovery token to use for the _etcd_ cluster
+* __request_discovery_token__ (default-=yes) -- if __discovery_token__ is not provided then obtain one from https://discovery.etcd.io/new
+
 #### Start up and Shutdown 
 
 ```bash
@@ -85,12 +87,13 @@ certain corner cases where the playbook may produce incorrect results or
 error out:
 
 * Can not provision cluster of size 1, i.e. the variable __vm_count__ should be at least 2
-* After a cluster is provisioned it has to be restarted manually in order for each VM to properly acquire its domain name
+* After a cluster is provisioned it has to be restarted in order for each VM to properly acquire the domain name from the DHCP server
 
 ### TODO list
 
 * Use [Logical Volume Manager](https://www.sourceware.org/lvm2/) to create disk partitions for the disk images of the virtual machines
 * Implement method to specify the virtual machines by name in the inventory file
-* Download of CoreOS image shoould be done only if the image was not downloaded already, or if explicitly requested
-* At the end of _create_, _start_ and _restart_ commands there are pauses of fixed number of seconds to gibe the VM a chance to complete the operation. It will be better to query and status of the VMs and finish when _libvirt_ gives positive indicates.
+* Download of CoreOS image should be done only if the image was not downloaded already, or if explicitly requested
+* At the end of _create_, _start_ and _restart_ commands there are pauses of fixed number of seconds to give the VMs chance to complete the operation. Instead the playbook should query the status of the VMs and finish when _libvirt_ gives positive indicates.
+* _etcd_ cluster should be initialized via either discovery token or explicitly setting the peer hostnames
 ~~* Acquire new etcd discovery token automatically every time new cluster is provisioned~~
