@@ -9,14 +9,12 @@ cloud_init_profile:     "basic"
 
 # etcd cluster discovery token
 
-use_discovery_token:        "yes"
+use_discovery_token:        true
 request_discovery_url:      https://discovery.etcd.io/new
 default_discovery_url:      https://discovery.etcd.io
 
 # obtain discovery token from https://discovery.etcd.io/new
-request_discovery_token:    "yes"
 discovery_token:            ""
 
 # or provide one via playbook variable
-# request_discovery_token:    "no
 # discovery_token:            "your-token-here"

@@ -29,7 +29,7 @@ Follow these simple steps:
 1. Run the [create Ansible playbook](create.yml)
 
 ```bash
-$ ansible-playbook -i hosts create.yml -e "vm_count=3"
+$ ansible-playbook -i hosts create.yml -e "vm_count=5"
 ...
 
 ```
@@ -38,34 +38,40 @@ $ ansible-playbook -i hosts create.yml -e "vm_count=3"
 
 The playbook consists of several roles which are like seperate steps of the
 procedure to provision the cluster. Each role has tag which allows to skip
-or select for execution indivisual steps. This makes most sense for the
-_download_ role because after the CoreOS image is downloaded one time it is
-a waste of time download the same image every time the playbook is executed.
+or select for execution indivisual steps. For example to skip the creation
+of cloud-init file for each virtual machine, request that roles and tasks
+with _init_ tag be skipped:
 
 ```bash
-$ ansible-playbook -i hosts create.yml -e "vm_count=3" --skip-tags=download
+$ ansible-playbook -i hosts create.yml -e "vm_count=5" --skip-tags=init
 ...
 
 ```
 
-#### Options
+By default the playbook will not download vm image from the official site if
+one already exists in the download folder. Therefore it is not necessary to
+skip the tasks with tag _download_. OTOH if the vm image has to be refreshed
+then use the __force_download__ flag.
+
+#### Provisioning options
 
 These playbook variables that can be used to customize the provisioned cluster:
 
-* __vm_count__ -- number of virtual machines in the cluster
+* __vm_count__ (default=3) -- number of virtual machines in the cluster
 * __cloud_init_profile__
  * __basic__ (default) -- minimum setup, set hostname and upload ssh keys
  * __etcd_fleet__ -- _etcd_ and _fleet_ services are started on each VM
-* __discovery_token__ -- pass _etcd_ discovery token to use for the _etcd_ cluster
-* __request_discovery_token__ (default-=yes) -- if __discovery_token__ is not provided then obtain one from https://discovery.etcd.io/new
+* __discovery_token__ -- pass _etcd_ discovery token for use by the _etcd_ cluster, if not provided one will be generated from https://discovery.etcd.io/new
+* __use_discovery_token__ (default=yes) -- __discovery_token__ will be used to find all neighbors in the cluster
+* __force_download__ -- fresh vm image will be downloaded even if one exists in the download folder
 
 #### Start up and Shutdown 
 
 ```bash
-$ ansible-playbook -i hosts admin.yml -t start -e "vm_count=3"
+$ ansible-playbook -i hosts admin.yml -t start -e "vm_count=5"
 ...
 
-$ ansible-playbook -i hosts admin.yml -t shutdown -e "vm_count=3"
+$ ansible-playbook -i hosts admin.yml -t shutdown -e "vm_count=5
 ...
 
 ```
@@ -83,8 +89,7 @@ $ ansible-playbook -i hosts destroy.yml -e "vm_count=3"
 Due to my incomplete knowledge of the capabilities that [Ansible](http://docs.ansible.com/]
 provides, as well as some inherent limitations of what can and can not be
 coded in [Ansible playbook](http://docs.ansible.com/playbooks.html), there are
-certain corner cases where the playbook may produce incorrect results or 
-error out:
+corner cases where the playbook may produce incorrect results or error out:
 
 * Can not provision cluster of size 1, i.e. the variable __vm_count__ should be at least 2
 * After a cluster is provisioned it has to be restarted in order for each VM to properly acquire the domain name from the DHCP server
@@ -93,7 +98,7 @@ error out:
 
 * Use [Logical Volume Manager](https://www.sourceware.org/lvm2/) to create disk partitions for the disk images of the virtual machines
 * Implement method to specify the virtual machines by name in the inventory file
-* Download of CoreOS image should be done only if the image was not downloaded already, or if explicitly requested
+~~* Download of CoreOS image should be done only if the image was not downloaded already, or if explicitly requested~~
 * At the end of _create_, _start_ and _restart_ commands there are pauses of fixed number of seconds to give the VMs chance to complete the operation. Instead the playbook should query the status of the VMs and finish when _libvirt_ gives positive indicates.
 * _etcd_ cluster should be initialized via either discovery token or explicitly setting the peer hostnames
 ~~* Acquire new etcd discovery token automatically every time new cluster is provisioned~~

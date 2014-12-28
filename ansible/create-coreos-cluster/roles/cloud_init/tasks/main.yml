@@ -2,7 +2,7 @@
 # Create cloud-init files for all VMs
 
 - include:    new_discovery_token.yml
-  when:       discovery_token == "" and request_discovery_token | bool
+  when:       use_discovery_token | bool and discovery_token == ""
 
 - include:    create_cloud_init.yml
   sudo:       yes

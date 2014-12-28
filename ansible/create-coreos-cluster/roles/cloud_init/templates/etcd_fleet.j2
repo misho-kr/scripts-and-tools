@@ -17,8 +17,13 @@ coreos:
     verbose: true
     name: coreos-{{ item }}
 
+    {% if use_discovery_token is True %}
     # generate a new token for each unique cluster from https://discovery.etcd.io/new
     discovery: {{ discovery_url }}
+    {% else %}
+    peers: TBD
+
+    {% endif %}
 
     # multi-region and multi-cloud deployments need to use $public_ipv4
     addr: coreos-{{ item }}:4001
