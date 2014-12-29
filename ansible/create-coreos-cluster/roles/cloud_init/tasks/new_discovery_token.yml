@@ -6,3 +6,5 @@
        method=GET
        return_content=yes
   register: new_discovery_token
+
+- debug: msg="New discovery token >> {{ new_discovery_token.content }}"

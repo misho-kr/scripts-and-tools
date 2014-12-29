@@ -1,7 +1,7 @@
 ---
 # Upload vm image to provisionging host
 
-- debug: msg=" VM IMAGE == {{ vm_image_name_compressed }}"
+# - debug: msg=" VM IMAGE == {{ vm_image_name_compressed }}"
 
 - name: remove old vm image directory, if exists
   file: name={{ remote_vm_image_dir }} state=absent
