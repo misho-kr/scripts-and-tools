@@ -1,13 +1,19 @@
 ---
 # Create cloud-init files for all VMs
 
-# - name: remove old directory for cloud-init files
-#   file: name="{{ cloud_init_dir }}" state=absent
+# - debug: msg="vm_count={{ vm_count }}"
+# - debug: msg="host_indices={{ host_indices }}"
+
+- name: Remove old directory for cloud-init files
+  file: name="{{ cloud_init_dir }}/configdrive-vm-{{ item }}"
+        state=absent
+  with_sequence: count={{ vm_count }}
 
 - name: Create directory for cloud-init files
   file: name="{{ cloud_init_dir }}/configdrive-vm-{{ item }}/openstack/latest"
         state=directory
   with_sequence: count={{ vm_count }}
+  register: hosts_indexes
 
 - template: src="{{ cloud_init_profile }}.j2"
             dest="{{ cloud_init_dir }}/configdrive-vm-{{ item }}/openstack/latest/user_data"

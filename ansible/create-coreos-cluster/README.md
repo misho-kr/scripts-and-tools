@@ -98,7 +98,7 @@ corner cases where the playbook may produce incorrect results or error out:
 
 * Use [Logical Volume Manager](https://www.sourceware.org/lvm2/) to create disk partitions for the disk images of the virtual machines
 * Implement method to specify the virtual machines by name in the inventory file
-~~* Download of CoreOS image should be done only if the image was not downloaded already, or if explicitly requested~~
+* ~~Download of CoreOS image should be done only if the image was not downloaded already, or if explicitly requested~~
 * At the end of _create_, _start_ and _restart_ commands there are pauses of fixed number of seconds to give the VMs chance to complete the operation. Instead the playbook should query the status of the VMs and finish when _libvirt_ gives positive indicates.
-* _etcd_ cluster should be initialized via either discovery token or explicitly setting the peer hostnames
-~~* Acquire new etcd discovery token automatically every time new cluster is provisioned~~
+* ~~_etcd_ cluster should be initialized via either [discovery token](https://coreos.com/docs/cluster-management/setup/cluster-discovery) or [explicitly setting the peer hostnames](http://www.chrislunsford.com/blog/2014/08/01/exploring-etcd)~~
+* ~~Acquire new etcd discovery token automatically every time new cluster is provisioned~~

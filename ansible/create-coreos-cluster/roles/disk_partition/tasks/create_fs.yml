@@ -8,7 +8,7 @@
   file: name={{ vm_image_storage_fs_dir }} setype="virt_image_t"
   when: ansible_selinux is defined
 
-- debug: msg="Now extracting image => {{ remote_vm_image_dir }}/{{ vm_image_name_compressed }}"
+# - debug: msg="Now extracting image => {{ remote_vm_image_dir }}/{{ vm_image_name_compressed }}"
 
 # - name: extract vm image
 #   unarchive: src="{{ remote_vm_image_dir }}/{{ vm_image_name_compressed }}"
