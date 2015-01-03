@@ -1,15 +1,11 @@
-CoreOS Cluster on KVM VMs
-=========================
+KVM Cluster of CoreOS machines
+==============================
 
-[CoreOS](https://coreos.com) is a minimal Linux distribution designed for deployments in cloud infrastructure projects.
+This [Ansible playbook](http://docs.ansible.com/playbooks.html) creates a cluster of [CoreOS](https://coreos.com) servers running on KVM virtual machines running. [CoreOS](https://coreos.com) is a minimal Linux distribution designed for deployments in cloud infrastructure projects
 
 ### Goal
 
-This [Ansible playbook](http://docs.ansible.com/playbooks.html) creates a
-cluster of KVM-based virtual machines running CoreOS. It downloads VM image
-from the official site and starts the virtual machines from that image.
-
-For convenience there are several Ansible scripts to manage the cluster after was provisioned.
+This [Ansible playbook](http://docs.ansible.com/playbooks.html) creates a cluster of KVM-based virtual machines running CoreOS. It downloads VM image from the official site and starts the virtual machines from that image.
 
 Ideally a cluster can be defined in one of two possible methods:
 
@@ -19,6 +15,8 @@ Ideally a cluster can be defined in one of two possible methods:
 _Note: At this time only the first method (by vm count) is implemented._
 
 ### Cluster management
+
+For convenience there are several Ansible scripts to manage the cluster after was provisioned.
 
 #### Create 
 
@@ -68,14 +66,9 @@ $ ansible-playbook -i hosts destroy.yml -e "vm_count=3"
 
 #### Repeated execution
 
-This option is not that useful anymore, but it is handy when troubleshooting
-some problem.
+This option is not that useful anymore, but it is handy when troubleshooting some problem.
 
-The playbook consists of several roles which are like seperate steps of the
-procedure to provision the cluster. Each role has tag which allows to skip
-or select for execution indivisual steps. For example to skip the creation
-of cloud-init file for each virtual machine, request that roles and tasks
-with _init_ tag be skipped:
+The playbook consists of several roles which are like seperate steps of the procedure to provision the cluster. Each role has tag which allows to skip or select for execution indivisual steps. For example to skip the creation of cloud-init file for each virtual machine, request that roles and tasks with _init_ tag be skipped:
 
 ```bash
 $ ansible-playbook -i hosts create.yml -e "vm_count=5" --skip-tags=init
@@ -83,27 +76,21 @@ $ ansible-playbook -i hosts create.yml -e "vm_count=5" --skip-tags=init
 
 ```
 
-By default the playbook will not download vm image from the official site if
-one already exists in the download folder. Therefore it is not necessary to
-skip the tasks with tag _download_. OTOH if the vm image has to be refreshed
-then use the __force_download__ flag.
+By default the playbook will not download vm image from the official site if one already exists in the download folder. Therefore it is not necessary to skip the tasks with tag _download_. OTOH if the vm image has to be refreshed then use the __force_download__ flag.
 
 ### Issues and workarounds
 
-Due to my incomplete knowledge of the capabilities that [Ansible](http://docs.ansible.com/)
-provides, as well as some inherent limitations of what can and can not be
-coded in [Ansible playbook](http://docs.ansible.com/playbooks.html), there are
-corner cases where the playbook may produce incorrect results or error out:
+Due to my incomplete knowledge of the capabilities that [Ansible](http://docs.ansible.com/) provides, as well as some inherent limitations of what can and can not be coded in [Ansible playbook](http://docs.ansible.com/playbooks.html), there are corner cases where the playbook may produce incorrect results or error out:
 
 * Can not provision cluster of size 1, i.e. the variable __vm_count__ should be at least 2
-* After a cluster is provisioned it has to be restarted in order for each VM to properly acquire the domain name from the DHCP server
+* After a cluster is provisioned it has to be restarted in order for each VM to properly acquire the domain name from the DHCP server (this is handled by the playbook)
 
 ### TODO list
 
+* Implement a method to specify the virtual machines by name in the inventory file
+* At the end of _create_, _start_ and _restart_ commands there are pauses of fixed number of seconds to give the VMs chance to complete the operation. Instead the playbook should query the status of the VMs and finish when _libvirt_ gives positive indicator.
 * ~~Use [Logical Volume Manager](https://www.sourceware.org/lvm2/) to create disk partitions for the disk images of the virtual machines~~
-* When cluster is destroyed, the files or logical volumes of the virtual machines should be deleted
-* Implement method to specify the virtual machines by name in the inventory file
+* ~~When cluster is destroyed, the files or logical volumes of the virtual machines should be deleted~~
 * ~~Download of CoreOS image should be done only if the image was not downloaded already, or if explicitly requested~~
-* At the end of _create_, _start_ and _restart_ commands there are pauses of fixed number of seconds to give the VMs chance to complete the operation. Instead the playbook should query the status of the VMs and finish when _libvirt_ gives positive indicates.
 * ~~_etcd_ cluster should be initialized via either [discovery token](https://coreos.com/docs/cluster-management/setup/cluster-discovery) or [explicitly setting the peer hostnames](http://www.chrislunsford.com/blog/2014/08/01/exploring-etcd)~~
 * ~~Acquire new etcd discovery token automatically every time new cluster is provisioned~~

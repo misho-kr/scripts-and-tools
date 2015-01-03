@@ -1,5 +1,7 @@
 ---
 
+remote_vm_image_dir:      "{{ playbook_dir }}/upload.dir"
+
 # Empty <vg-name> indicates plain filesystem
 vg_name:                  ""
 vg_dev_dir:               "/dev/{{ vg_name }}"
