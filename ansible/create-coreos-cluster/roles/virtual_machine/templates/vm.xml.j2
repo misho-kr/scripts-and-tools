@@ -20,7 +20,11 @@
     <emulator>/usr/bin/qemu-kvm</emulator>
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2'/>
+      {% if vg_name == "" %}
       <source file='{{ vm_image_dir }}/vm-{{ item }}.img'/>
+      {%else %}
+      <source file='{{ vg_dev_dir }}/HDD-CoreOS-VM{{ item }}'/>
+      {%- endif %}
       <target dev='vda' bus='virtio'/>
     </disk>
     <controller type='usb' index='0'>
@@ -32,7 +36,7 @@
     </filesystem>
     <interface type='network'>
 <!--
-      <mac address='52:54:00:fe:b3:c0'/>
+      <mac address='ab:cd:ef:gh:ij'/>
       <source dev='eth0' mode='bridge'/>
 -->
       <source network='{{ vm_network_name }}'/>

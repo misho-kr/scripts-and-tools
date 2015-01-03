@@ -34,30 +34,12 @@ $ ansible-playbook -i hosts create.yml -e "vm_count=5"
 
 ```
 
-#### Repeated execution
-
-The playbook consists of several roles which are like seperate steps of the
-procedure to provision the cluster. Each role has tag which allows to skip
-or select for execution indivisual steps. For example to skip the creation
-of cloud-init file for each virtual machine, request that roles and tasks
-with _init_ tag be skipped:
-
-```bash
-$ ansible-playbook -i hosts create.yml -e "vm_count=5" --skip-tags=init
-...
-
-```
-
-By default the playbook will not download vm image from the official site if
-one already exists in the download folder. Therefore it is not necessary to
-skip the tasks with tag _download_. OTOH if the vm image has to be refreshed
-then use the __force_download__ flag.
-
 #### Provisioning options
 
 These playbook variables that can be used to customize the provisioned cluster:
 
 * __vm_count__ (default=3) -- number of virtual machines in the cluster
+* __vg_name__ -- use this volume group to create logical volumes for vm images; if not defined then use plain filesystem
 * __cloud_init_profile__
  * __basic__ (default) -- minimum setup, set hostname and upload ssh keys
  * __etcd_fleet__ -- _etcd_ and _fleet_ services are started on each VM
@@ -84,9 +66,31 @@ $ ansible-playbook -i hosts destroy.yml -e "vm_count=3"
 
 ```
 
+#### Repeated execution
+
+This option is not that useful anymore, but it is handy when troubleshooting
+some problem.
+
+The playbook consists of several roles which are like seperate steps of the
+procedure to provision the cluster. Each role has tag which allows to skip
+or select for execution indivisual steps. For example to skip the creation
+of cloud-init file for each virtual machine, request that roles and tasks
+with _init_ tag be skipped:
+
+```bash
+$ ansible-playbook -i hosts create.yml -e "vm_count=5" --skip-tags=init
+...
+
+```
+
+By default the playbook will not download vm image from the official site if
+one already exists in the download folder. Therefore it is not necessary to
+skip the tasks with tag _download_. OTOH if the vm image has to be refreshed
+then use the __force_download__ flag.
+
 ### Issues and workarounds
 
-Due to my incomplete knowledge of the capabilities that [Ansible](http://docs.ansible.com/]
+Due to my incomplete knowledge of the capabilities that [Ansible](http://docs.ansible.com/)
 provides, as well as some inherent limitations of what can and can not be
 coded in [Ansible playbook](http://docs.ansible.com/playbooks.html), there are
 corner cases where the playbook may produce incorrect results or error out:
@@ -96,7 +100,8 @@ corner cases where the playbook may produce incorrect results or error out:
 
 ### TODO list
 
-* Use [Logical Volume Manager](https://www.sourceware.org/lvm2/) to create disk partitions for the disk images of the virtual machines
+* ~~Use [Logical Volume Manager](https://www.sourceware.org/lvm2/) to create disk partitions for the disk images of the virtual machines~~
+* When cluster is destroyed, the files or logical volumes of the virtual machines should be deleted
 * Implement method to specify the virtual machines by name in the inventory file
 * ~~Download of CoreOS image should be done only if the image was not downloaded already, or if explicitly requested~~
 * At the end of _create_, _start_ and _restart_ commands there are pauses of fixed number of seconds to give the VMs chance to complete the operation. Instead the playbook should query the status of the VMs and finish when _libvirt_ gives positive indicates.

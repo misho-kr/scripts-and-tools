@@ -1,5 +1,6 @@
 # -*- Mode: Python -*-
 
+import json
 from ansible import errors
 
 def make_list(numof, start=0):
@@ -19,11 +20,19 @@ def make_list(numof, start=0):
 
     return list(xrange(start, start+int(numof)))
 
+def make_dict(data):
+    """Make dictitonary from JSON document in string"""
+
+#    raise errors.AnsibleFilterError("make_dict data: %s" % data)
+#    raise errors.AnsibleFilterError("make_dict result: %s" % str(json.loads(data)))
+#    raise errors.AnsibleFilterError("make_dict result type: %s" % type(json.loads(data)))
+    return json.loads(data)
+
 class FilterModule(object):
     ''' Ansible misc jinja2 filters '''
 
     def filters(self):
         return {
-            # list operations
             'make_list': make_list,
+            'make_dict': make_dict,
         }
