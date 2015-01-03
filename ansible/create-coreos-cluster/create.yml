@@ -28,6 +28,7 @@
 
     - name: discover vm image name
       command: cat "{{ local_vm_image_dir }}"/vm_image_name.txt
+      tags: disks
       register: saved_vm_image_name
 
   vars:
