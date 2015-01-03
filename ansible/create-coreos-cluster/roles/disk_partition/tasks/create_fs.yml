@@ -23,9 +23,10 @@
 - debug: msg="Just extracted image => {{ vm_image_storage_fs_dir }}/{{ vm_image_name }}"
 
 - name: create first vm image
-  command: mv "{{ vm_image_storage_fs_dir }}/{{ vm_image_name }}" "{{ vm_image_storage_fs_dir }}/vm-1.img"
+  command: mv "{{ vm_image_storage_fs_dir }}/{{ vm_image_name }}" "{{ vm_image_storage_fs_dir }}/{{ vm_image_name_prefix }}-1.img"
 
 - name: create remaining vm images
-  command: cp "{{ vm_image_storage_fs_dir }}/vm-1.img" "{{ vm_image_storage_fs_dir }}/vm-{{ item }}.img"
+  command: cp "{{ vm_image_storage_fs_dir }}/{{ vm_image_name_prefix }}-1.img"
+              "{{ vm_image_storage_fs_dir }}/{{ vm_image_name_prefix }}-{{ item }}.img"
   when: vm_count > 1
   with_sequence: start=2 end={{ vm_count }}

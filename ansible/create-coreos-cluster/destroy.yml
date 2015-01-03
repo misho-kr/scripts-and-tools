@@ -17,6 +17,8 @@
 
     - include: tasks/destroy.yml  vms={{ virt_vms.list_vms }}
     - include: tasks/shutdown_unconditional.yml vms={{ virt_vms.list_vms }}
+    - include: tasks/cleanup.yml
+      sudo: yes
 
 # ----------------------------------------------------------
 # eof

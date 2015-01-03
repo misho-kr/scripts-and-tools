@@ -1,11 +1,9 @@
 ---
 
-cloud_init_dir:         "{{ vm_image_storage_fs_dir }}"
+use_my_public_key:          true
+my_public_key_file:         ".ssh/id_rsa.pub"
 
-use_my_public_key:      true
-my_public_key_file:     ".ssh/id_rsa.pub"
-
-cloud_init_profile:     "basic"
+cloud_init_profile:         "basic"
 
 # etcd cluster discovery token
 
