@@ -31,5 +31,7 @@
   with_sequence: vm_count
 
 - name: copy vm image to logical volumes
-  command: dd if="{{ remote_vm_image_dir }}/{{ vm_image_name }}" of="{{ vg_dev_dir }}/HDD-CoreOS-VM{{ item }}"
+  command: dd if="{{ remote_vm_image_dir }}/{{ vm_image_name }}"
+              of="{{ vg_dev_dir }}/HDD-CoreOS-VM{{ item }}"
+              bs=1M
   with_sequence: vm_count
