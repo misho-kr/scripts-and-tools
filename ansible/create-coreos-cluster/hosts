@@ -8,13 +8,15 @@ provision_host
 coreos_servers
 
 [download_host]
-download_host		ansible_connection=local
+download_host		  ansible_connection=local
 
 [provision_host]
 provision_host		ansible_connection=local
 
 [coreos_servers]
 coreos-1
+coreos-2
+coreos-3
 
 # -----------------------------------------------------------------------
 # eof

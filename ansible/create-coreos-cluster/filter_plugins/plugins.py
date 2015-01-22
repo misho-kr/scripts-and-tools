@@ -36,12 +36,17 @@ def are_vms_in_state(data):
             return(False)
     return(True)
 
+def list_len(date):
+    """Find out how long the list is"""
+    return len(data)
+    
 class FilterModule(object):
     ''' Ansible misc jinja2 filters '''
 
     def filters(self):
         return {
-            'make_list': make_list,
-            'make_dict': make_dict,
-            'vms_in_state': are_vms_in_state,
+            'make_list':        make_list,
+            'list_len':         list_len,
+            'make_dict':        make_dict,
+            'vms_in_state':     are_vms_in_state,
         }

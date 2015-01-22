@@ -15,6 +15,17 @@ cloud_init_dir:           "{{ vm_image_storage_fs_dir }}"
 
 vm_image_name_prefix:     "vm-coreos"
 
-vm_create_pause:          40      # seconds
-vm_startup_pause:         20      # seconds
+vm_create_pause:          30      # seconds
+vm_startup_pause:         10      # seconds
 vm_shutdown_pause:        5       # seconds
+
+# can not use variables with do-until conditional (roll my eyes)
+# vm_cmd_retries:           3
+# vm_cmd_delay:             1
+
+vm_create_timeout:        90      # seconds
+vm_startup_timeout:       60      # seconds
+
+vm_shutdown_timeout_1:    5       # seconds
+vm_shutdown_timeout_2:    10      # seconds
+vm_shutdown_timeout_3:    15      # seconds
