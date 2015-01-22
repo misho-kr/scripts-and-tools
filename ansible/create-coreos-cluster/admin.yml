@@ -32,12 +32,17 @@
     - include: tasks/status.yml vms={{ virt_vms.list_vms }}
       tags: status
 
-    - include: tasks/shutdown.yml vms={{ virt_info }}
+    # this control variable has to be set in advance otherwise
+    # the <until> check in the loop of the shutdown task will fail
+    - set_fact:
+        vms_are_shutdown=true
       tags: [ 'shutdown', 'restart' ]
 
-    # Pause for N seconds to shutdown all vms
-    - pause: seconds={{ vm_shutdown_pause }}
-      tags: restart
+    - include: tasks/shutdown.yml vms={{ virt_info }}
+      tags: [ 'shutdown', 'restart' ]
+      until:    vms_are_shutdown
+      retries:  3
+      delay:    1
 
     - name: get info of all virtual machines (after shutdown command)
       virt: command=info

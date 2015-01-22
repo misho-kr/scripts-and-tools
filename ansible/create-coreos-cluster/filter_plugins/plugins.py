@@ -28,6 +28,14 @@ def make_dict(data):
 #    raise errors.AnsibleFilterError("make_dict result type: %s" % type(json.loads(data)))
     return json.loads(data)
 
+def are_vms_in_state(data):
+    """Test if the results indicate all virtual machines are the desired state"""
+
+    for result in data["results"]:
+        if result["changed"] and result["stdout"] != 'yes':
+            return(False)
+    return(True)
+
 class FilterModule(object):
     ''' Ansible misc jinja2 filters '''
 
@@ -35,4 +43,5 @@ class FilterModule(object):
         return {
             'make_list': make_list,
             'make_dict': make_dict,
+            'vms_in_state': are_vms_in_state,
         }
