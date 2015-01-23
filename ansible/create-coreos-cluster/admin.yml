@@ -21,26 +21,27 @@
       tags: [ 'info', 'start', 'shutdown', 'restart' ]
       register: virt_info
 
+  vars:
+
+    coreos_vms:         '{{ virt_vms.list_vms | vm_by_name("coreos-*") }}'
+    num_of_coreos_vms:  '{{ coreos_vms | list_len | int }}'
+    coreos_vm_info:     '{{ virt_info | vm_info_by_name("coreos-*") }}'
+
   tasks:
 
-    - debug: var=virt_vms.list_vms
+    - debug: var=coreos_vms
       tags: list
 
-    - debug: var=virt_info
+    - debug: var=coreos_vm_info
       tags: info
 
-    - include: tasks/status.yml vms={{ virt_vms.list_vms }}
+    - include: tasks/status.yml vms={{ coreos_vms }}
       tags: status
 
-    - include: tasks/shutdown.yml vms={{ virt_info }}
+    - include: tasks/shutdown.yml vms={{ coreos_vm_info }}
       tags: [ 'shutdown', 'restart' ]
 
-    - name: get info of all virtual machines (after shutdown command)
-      virt: command=info
-      tags: restart
-      register: virt_info
-
-    - include: tasks/start.yml vms={{ virt_info }}
+    - include: tasks/start.yml vms={{ coreos_vm_info }}
       tags: [ 'start', 'restart' ]
 
     # Pause for N seconds to start up all vms

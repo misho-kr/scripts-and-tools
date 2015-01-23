@@ -83,12 +83,12 @@ By default the playbook will not download vm image from the official site if one
 Due to my incomplete knowledge of the capabilities that [Ansible](http://docs.ansible.com/) provides, as well as some inherent limitations of what can and can not be coded in [Ansible playbook](http://docs.ansible.com/playbooks.html), there are corner cases where the playbook may produce incorrect results or error out:
 
 * Can not provision cluster of size 1, i.e. the variable __vm_count__ should be at least 2
-* After a cluster is provisioned it has to be restarted in order for each VM to properly acquire the domain name from the DHCP server (this is handled by the playbook)
+* After a cluster is provisioned it has to be restarted in order for each VM to properly acquire the domain name from the DHCP server (this is handled by the playbook, no need for manual action)
 
 ### TODO list
 
 * Implement a method to specify the virtual machines by name in the inventory file
-* At the end of _create_, _start_ and _restart_ commands there are pauses of fixed number of seconds to give the VMs chance to complete the operation. Instead the playbook should query the status of the VMs and finish when _libvirt_ gives positive indicator.
+* ~~At the end of _create_, _start_ and _restart_ commands there are pauses of fixed number of seconds to give the VMs chance to complete the operation. Instead the playbook should query the status of the VMs and finish when _libvirt_ gives positive indicator.~~
 * ~~Use [Logical Volume Manager](https://www.sourceware.org/lvm2/) to create disk partitions for the disk images of the virtual machines~~
 * ~~When cluster is destroyed, the files or logical volumes of the virtual machines should be deleted~~
 * ~~Download of CoreOS image should be done only if the image was not downloaded already, or if explicitly requested~~

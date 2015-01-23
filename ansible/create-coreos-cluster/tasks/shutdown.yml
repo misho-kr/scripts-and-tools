@@ -14,16 +14,17 @@
 #  Loop 1
 # ------------------------------------------------------------
 
+- set_fact: timeout='{{ (vm_shutdown_timeout / num_of_coreos_vms | int) | int }}'
+
 - name: shutdown coreos virtual machines
   virt: name="{{ item.key }}"
         command=shutdown
-  when: item.key | match("coreos-*") and item.value.state != "shutdown"
+  when: item.value.state != "shutdown"
   with_dict: vms
 
 - name: wait for virtual machines to shutdown
-  command: /tmp/vm_state_wait.sh -s shut -t {{ vm_shutdown_timeout_1 }} {{ item.key }}
+  command: /tmp/vm_state_wait.sh -s shut -t {{ timeout }} {{ item.key }}
   register: shutdown_result
-  when: item.key | match("coreos-*")
   with_dict: vms
 
 # - debug: msg="result = {{ shutdown_result }}"
@@ -37,17 +38,18 @@
 #  Loop 2
 # ------------------------------------------------------------
 
+- set_fact: timeout="{{ ( 2 * vm_shutdown_timeout / num_of_coreos_vms | int) | int }}"
+
 - name: shutdown coreos virtual machines
   virt: name="{{ item.key }}"
         command=shutdown
-  when: not vms_are_shutdown | bool and 
-        item.key | match("coreos-*") and item.value.state != "shutdown"
+  when: not vms_are_shutdown | bool and item.value.state != "shutdown"
   with_dict: vms
 
 - name: wait for virtual machines to shutdown
-  command: /tmp/vm_state_wait.sh -s shut -t {{ vm_shutdown_timeout_2 }} {{ item.key }}
+  command: /tmp/vm_state_wait.sh -s shut -t {{ timeout }} {{ item.key }}
   register: shutdown_result
-  when: not vms_are_shutdown | bool and item.key | match("coreos-*")
+  when: not vms_are_shutdown | bool
   with_dict: vms
 
 - set_fact:
@@ -57,17 +59,18 @@
 #  Loop 3
 # ------------------------------------------------------------
 
+- set_fact: timeout="{{ ( 3 * vm_shutdown_timeout / num_of_coreos_vms | int) | int }}"
+
 - name: shutdown coreos virtual machines
   virt: name="{{ item.key }}"
         command=shutdown
-  when: not vms_are_shutdown | bool and 
-        item.key | match("coreos-*") and item.value.state != "shutdown"
+  when: not vms_are_shutdown | bool and item.value.state != "shutdown"
   with_dict: vms
 
 - name: wait for virtual machines to shutdown
-  command: /tmp/vm_state_wait.sh -s shut -t {{ vm_shutdown_timeout_3 }} {{ item.key }}
+  command: /tmp/vm_state_wait.sh -s shut -t {{ timeout }} {{ item.key }}
   register: shutdown_result
-  when: not vms_are_shutdown | bool and item.key | match("coreos-*")
+  when: not vms_are_shutdown | bool
   with_dict: vms
 
 - set_fact:

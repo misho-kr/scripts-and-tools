@@ -25,7 +25,4 @@ vm_shutdown_pause:        5       # seconds
 
 vm_create_timeout:        90      # seconds
 vm_startup_timeout:       60      # seconds
-
-vm_shutdown_timeout_1:    5       # seconds
-vm_shutdown_timeout_2:    10      # seconds
-vm_shutdown_timeout_3:    15      # seconds
+vm_shutdown_timeout:      30      # seconds

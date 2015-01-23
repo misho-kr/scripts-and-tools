@@ -1,8 +1,0 @@
----
-# Shutdown
-
-- name: shutdown (unconditional) coreos virtual machines
-  virt: name="{{ item }}"
-        command=shutdown
-  when: item | match("coreos-*")
-  with_items: vms
