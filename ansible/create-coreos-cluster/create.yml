@@ -7,6 +7,8 @@
   connection: local
   tasks:
 
+    - assert:   { that: "vm_count > 1" }
+
     - include:  tasks/local_setup.yml
 
 # ----------------------------------------------------------
