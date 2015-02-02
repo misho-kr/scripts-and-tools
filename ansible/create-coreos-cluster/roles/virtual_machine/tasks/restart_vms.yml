@@ -1,6 +1,10 @@
 ---
 # Restart Virtual Machines
 
+################################################################
+#       This task is obsolete and will be removed
+################################################################
+
 - name: restart virtual machines, part 1 (shutdown)
   virt: name="coreos-{{ item }}"
         state=shutdown
