@@ -1,0 +1,7 @@
+---
+
+- name: Enable zookeeper service
+  service: name={{ zookeeper_server_svc }} state=stopped enabled=yes
+
+- name: Restart zookeeper service
+  service: name={{ zookeeper_server_svc }} state=restarted

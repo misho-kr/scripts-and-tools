@@ -1,0 +1,11 @@
+---
+
+zookeeper_conf_dir:         "/home/coreos/zookeeper/conf"
+
+zookeeper_dir:              "/var/lib/zookeeper"
+zookeeper_data_dir:         "{{ zookeeper_dir }}/data"
+zookeeper_log_dir:          "{{ zookeeper_dir }}/log"
+
+# the ports for zk servers to communicate with each other
+zookeeper_followers_port:   2888
+zookeeper_election_port:    3888

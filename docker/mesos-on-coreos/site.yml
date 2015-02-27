@@ -3,6 +3,18 @@
 #                     Mesosphere on CoreOS cluster                    #
 # ------------------------------------------------------------------- #
 
+- hosts: coreos
+  sudo: yes
+
+  tasks:
+
+    - debug: msg="running tasks on all CoreOS hosts"
+
+- hosts: zookeepers
+  roles:
+
+    - { role: zookeeper, tags: zookeeper, sudo: yes }
+
 # ------------------------------------------------------------------- #
 # eof
 #
