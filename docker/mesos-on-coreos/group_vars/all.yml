@@ -1,0 +1,6 @@
+---
+
+docker_image_zookeeper:     "jplock/zookeeper"
+docker_image_mesos_master:  "jplock/zookeeper"
+docker_image_mesos_slave:   "jplock/zookeeper"
+docker_image_marathon:      "jplock/zookeeper"

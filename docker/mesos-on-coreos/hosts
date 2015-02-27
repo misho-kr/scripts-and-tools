@@ -1,0 +1,44 @@
+# -----------------------------------------------------------------------
+#                             Mesos cluster
+# -----------------------------------------------------------------------
+
+[coreos-cluster:children]
+zookeepers
+mesos-masters
+mesos-slaves
+mesos-frameworks
+
+[zookeepers]
+coreos-1
+coreos-2
+coreos-3
+
+[mesos-masters]
+coreos-1
+coreos-2
+coreos-3
+
+# slaves ---------------------------------------------------------------
+
+[mesos-slaves:children]
+mesos-only-slaves
+marathon-slaves
+
+[mesos-only-slaves]
+coreos-2
+coreos-4
+
+[marathon-slaves]
+coreos-3
+coreos-5
+
+# frameworks -----------------------------------------------------------
+
+[mesos-frameworks:children]
+marathon-schedulers
+
+[marathon-schedulers]
+
+# -----------------------------------------------------------------------
+#                         End of Mesos Cluster
+# -----------------------------------------------------------------------
