@@ -1,0 +1,13 @@
+---
+# Download PyPy and get-pip, but only if necessary
+
+- name: check if PyPy was already downloaded
+  stat: path="{{ download_dir }}/{{ pypy_tarball }}"
+  register: is_pypy_downloaded
+
+- name: check if get-pip was already downloaded
+  stat: path="{{ download_dir }}/{{ get_pip_tarball }}"
+  register: is_get_pip_downloaded
+
+- include: download.yml
+  when: not (is_pypy_downloaded.stat.exists and is_get_pip_downloaded.stat.exists) or force_download | bool
