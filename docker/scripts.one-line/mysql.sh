@@ -3,13 +3,13 @@
 
 # set -x
 
-MONGO_PORT=21017
-MONGO_VERSION="2.6"
+MYSQL_PORT=3306
+MYSQL_VERSION="5.7.5"
 
 while getopts p:v: opt; do
   case "${opt}" in
-      p ) MONGO_PORT="${OPTARG}" ;;
-      v ) MONGO_VERSION="${OPTARG}" ;;
+      p ) MYSQL_PORT="${OPTARG}" ;;
+      v ) MYSQL_VERSION="${OPTARG}" ;;
       * )
           echo "invalid option: -${OPTARG}" >&2
           ;;
@@ -21,9 +21,13 @@ shift $(( OPTIND -1 ))
 # -----------------------------------------------------------------
 
 exec \
-  docker run --name=mongo -d -p "${MONGO_PORT}":21017 \
-    -v "${PWD}/mongo.db":/data/db \
-      mongo:"${MONGO_VERSION}" $*
+  docker run --name=mysql -d \
+    -p "${MYSQL_PORT}":3306 \
+    -e MYSQL_ROOT_PASSWORD="root" \
+    -e MYSQL_DATABASE="first_db" \
+    -e MYSQL_USER="user" -e MYSQL_PASSWORD="password" \
+    -v "${PWD}/mysql.db":/var/lib/mysql \
+      mysql:"${MYSQL_VERSION}" $*
 
 # -----------------------------------------------------------------
 # eof
