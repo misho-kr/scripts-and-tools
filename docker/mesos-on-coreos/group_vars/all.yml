@@ -1,6 +1,11 @@
 ---
 
-docker_image_zookeeper:     "jplock/zookeeper"
+download_dir:               "{{ playbook_dir }}/download.dir"
+
+pypy_tarball:               "pypy.tar.bz2"
+get_pip_filename:           "get_pip.py"
+
+docker_image_zookeeper:     "jplock/zookeeper:3.4.6"
 docker_image_mesos_master:  "jplock/zookeeper"
 docker_image_mesos_slave:   "jplock/zookeeper"
 docker_image_marathon:      "jplock/zookeeper"

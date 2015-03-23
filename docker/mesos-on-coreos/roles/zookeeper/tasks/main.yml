@@ -1,17 +1,17 @@
 ---
 # Deploy Docker zookeeper container 
 
-- name: Copy zookeeper systemd file
-  template: src="systemd-zookeeper.j2" dest=/etc/systemd/system
-  notify:
-    - Enable zookeeper service
+# - name: Copy zookeeper systemd file
+#   template: src="systemd-zookeeper.j2" dest=/etc/systemd/system
+#   notify:
+#     - Enable zookeeper service
 
 # ---------------------------------------------------------------------
 #  Configuration 
 # ---------------------------------------------------------------------
 
 - name: Create folder for zookeper configuration
-  file: path="{{ zookeeper_conf_dir}" state=directory
+  file: path="{{ zookeeper_conf_dir }}" state=directory
 
 - name: Create configuration files
   template: src={{ item }} dest="{{ zookeeper_conf_dir}}/{{ item | replace('.j2', '') }}" backup=yes

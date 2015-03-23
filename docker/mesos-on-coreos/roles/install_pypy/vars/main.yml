@@ -1,0 +1,6 @@
+---
+
+coreos_username:        "core"
+
+force_install:          false
+python_bin_location:    "${HOME}/bin/python"

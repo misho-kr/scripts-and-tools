@@ -1,11 +1,6 @@
 ---
 
-download_dir:           "{{ playbook_dir }}/download.dir"
-
 pypy_download_url:      https://bitbucket.org/pypy/pypy/downloads/pypy-2.5.0-linux64.tar.bz2
 get_pip_download_url:   https://bootstrap.pypa.io/get-pip.py
-
-pypy_tarball:           "{{ pypy_download_url     | basename }}"
-get_pip_tarball:        "{{ get_pip_download_url  | basename }}"
 
 force_download:         false

@@ -1,0 +1,10 @@
+---
+# Install PyPy and get-pip to CoreOS servers
+
+- name: check if python is already installed
+  raw: stat {{ python_bin_location }}
+  register: need_python
+  ignore_errors: True
+
+- include: install_pypy.yml
+  when: need_python | failed or force_install | bool

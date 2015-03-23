@@ -6,7 +6,7 @@
   register: is_pypy_downloaded
 
 - name: check if get-pip was already downloaded
-  stat: path="{{ download_dir }}/{{ get_pip_tarball }}"
+  stat: path="{{ download_dir }}/{{ get_pip_filename }}"
   register: is_get_pip_downloaded
 
 - include: download.yml
