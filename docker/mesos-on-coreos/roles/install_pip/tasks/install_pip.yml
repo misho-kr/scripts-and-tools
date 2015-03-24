@@ -1,0 +1,16 @@
+---
+# Install PyPy and get-pip to CoreOS servers
+
+- name: copy get-pip
+  copy: src="{{ download_dir }}/{{ get_pip_filename }}"
+        dest="."
+        mode="u+x"
+
+- name: install pip (python module)
+  command: python "{{ get_pip_filename }}"
+
+- name: install pip (executable script)
+  copy: src="pip" dest="{{ pip_bin_location }}" mode="a+x"
+
+- name: remove get-pip
+  file: path="{{ get_pip_filename }}" state=absent

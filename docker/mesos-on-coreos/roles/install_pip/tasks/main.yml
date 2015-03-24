@@ -1,0 +1,11 @@
+---
+# Install Pip on CoreOS servers
+
+- name: check if pip is already installed
+  file: path={{ pip_bin_location }} state=file
+  ignore_errors: True
+  changed_when: false
+  register: need_pip  
+
+- include: install_pip.yml
+  when: need_pip | failed or force_pip_install | bool

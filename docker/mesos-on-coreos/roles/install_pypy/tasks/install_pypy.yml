@@ -1,12 +1,11 @@
 ---
 # Install PyPy and get-pip to CoreOS servers
 
-- name: copy PyPy and get-pip to all servers
+- name: copy PyPy to all servers
   connection: local
   command: rsync -avz
               "{{ download_dir }}/{{ pypy_tarball }}"
-              "{{ download_dir }}/{{ get_pip_filename }}"
               "{{ coreos_username }}@{{ inventory_hostname }}:"
 
-- name: install PyPy and get-pip to all servers
+- name: install PyPy
   script: install_python.sh

@@ -1,0 +1,5 @@
+---
+
+force_pip_install:   false
+
+pip_bin_location:    "bin/pip"

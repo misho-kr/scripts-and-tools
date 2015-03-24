@@ -15,13 +15,17 @@
 
   roles:
 
-    - { role: install_pypy,  tags: install  }
+    - { role: install_pypy,  tags: pypy  }
 
 - hosts: coreos-cluster
   tasks:
 
     - debug: msg="running Ansible tasks on all CoreOS hosts"
     
+  roles:
+
+    - { role: install_pip,  tags: pip  }
+
 #    - { role: install_pypy,  tags: install  }
 # - hosts: zookeepers
 #   roles:

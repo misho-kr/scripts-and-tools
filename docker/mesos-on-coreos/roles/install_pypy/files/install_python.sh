@@ -27,6 +27,8 @@ mv pypy ${HOME}
 popd
 rmdir ${EXTRACT_DIR}
 
+rm -f ${PYPY_TARFILE}
+
 # -----------------------------------------------------------
 
 for d in ${HOME}/bin ${HOME}/pypy/lib; do

@@ -1,0 +1,5 @@
+---
+
+force_python_install:   false
+
+python_bin_location:    "${HOME}/bin/python"
