@@ -26,11 +26,9 @@
 
     - { role: install_pip,  tags: pip  }
 
-#    - { role: install_pypy,  tags: install  }
-# - hosts: zookeepers
-#   roles:
-
-#     - { role: zookeeper, tags: zookeeper, sudo: yes }
+- hosts: zookeepers
+  roles:
+    - { role: zookeeper, tags: zookeeper }
 
 # ------------------------------------------------------------------- #
 # eof

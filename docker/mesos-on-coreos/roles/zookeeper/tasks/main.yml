@@ -10,14 +10,38 @@
 #  Configuration 
 # ---------------------------------------------------------------------
 
-- name: Create folder for zookeper configuration
-  file: path="{{ zookeeper_conf_dir }}" state=directory
+- name: Create folder for zookeeper configuration, data and log files
+  file: path="{{ item }}" state=directory
+  with_items:
+    - "{{ zookeeper_conf_host_dir }}"
+    - "{{ zookeeper_volume_host_dir }}/data"
+    - "{{ zookeeper_volume_host_dir }}/log"
 
 - name: Create configuration files
-  template: src={{ item }} dest="{{ zookeeper_conf_dir}}/{{ item | replace('.j2', '') }}" backup=yes
+  template: src={{ item }} dest="{{ zookeeper_conf_host_dir }}/{{ item | replace('.j2', '') }}" backup=yes
+  register: zookeeper_conf_changed
   with_items:
     - zoo.cfg.j2
     - log4j.properties.j2
     - myid.j2
-  notify:
-    - Restart zookeeper service
+  # notify:
+  #   - Restart zookeeper service
+
+- name: Create link to myid file
+  file: src="{{ zookeeper_conf_container_dir }}/{{ item }}"
+        dest="{{ zookeeper_volume_host_dir }}/data/{{ item }}"
+        state=link
+        force=yes
+  with_items:
+    - myid
+
+- name: Create systemd service file
+  template: src={{ item }} dest="{{ zookeeper_conf_host_dir }}/{{ item | replace('.j2', '') }}" backup=yes
+  register: zookeeper_service_changed
+  with_items:
+    - systemd-zookeeper.j2
+  # notify:
+  #   - Restart zookeeper service
+
+- debug: msg="zookeeper_conf_changed    = {{ zookeeper_conf_changed }}"
+- debug: msg="zookeeper_service_changed = {{ zookeeper_service_changed }}"

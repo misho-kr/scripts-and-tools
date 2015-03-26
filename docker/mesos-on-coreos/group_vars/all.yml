@@ -1,5 +1,7 @@
 ---
 
+coreos_username:        "core"
+
 download_dir:               "{{ playbook_dir }}/download.dir"
 
 pypy_tarball:               "pypy.tar.bz2"
