@@ -1,7 +1,14 @@
 ---
 
+- name: Copy zookeeper service systemd file
+  sudo: yes
+  command: cp "{{ zookeeper_conf_host_dir }}/zookeeper.service"
+           /etc/systemd/system/zookeeper.service
+
 - name: Enable zookeeper service
-  service: name={{ zookeeper_server_svc }} state=stopped enabled=yes
+  sudo: yes
+  service: name=zookeeper state=stopped enabled=yes
 
 - name: Restart zookeeper service
-  service: name={{ zookeeper_server_svc }} state=restarted
+  sudo: yes
+  service: name=zookeeper state=restarted

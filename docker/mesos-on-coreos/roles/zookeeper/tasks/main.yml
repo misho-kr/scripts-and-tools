@@ -1,13 +1,8 @@
 ---
 # Deploy Docker zookeeper container 
 
-# - name: Copy zookeeper systemd file
-#   template: src="systemd-zookeeper.j2" dest=/etc/systemd/system
-#   notify:
-#     - Enable zookeeper service
-
 # ---------------------------------------------------------------------
-#  Configuration 
+#  Service 
 # ---------------------------------------------------------------------
 
 - name: Create folder for zookeeper configuration, data and log files
@@ -17,15 +12,28 @@
     - "{{ zookeeper_volume_host_dir }}/data"
     - "{{ zookeeper_volume_host_dir }}/log"
 
+- name: Create systemd service file
+  template: src={{ item }} dest="{{ zookeeper_conf_host_dir }}/{{ item | replace('.j2', '') }}"
+  with_items:
+    - zookeeper.service.j2
+  notify:
+    - Copy zookeeper service systemd file
+    - Enable zookeeper service
+    - Restart zookeeper service
+
+# ---------------------------------------------------------------------
+#  Configuration 
+# ---------------------------------------------------------------------
+
 - name: Create configuration files
-  template: src={{ item }} dest="{{ zookeeper_conf_host_dir }}/{{ item | replace('.j2', '') }}" backup=yes
-  register: zookeeper_conf_changed
+  template: src={{ item }} dest="{{ zookeeper_conf_host_dir }}/{{ item | replace('.j2', '') }}"
+            backup=yes
   with_items:
     - zoo.cfg.j2
     - log4j.properties.j2
     - myid.j2
-  # notify:
-  #   - Restart zookeeper service
+  notify:
+    - Restart zookeeper service
 
 - name: Create link to myid file
   file: src="{{ zookeeper_conf_container_dir }}/{{ item }}"
@@ -34,14 +42,3 @@
         force=yes
   with_items:
     - myid
-
-- name: Create systemd service file
-  template: src={{ item }} dest="{{ zookeeper_conf_host_dir }}/{{ item | replace('.j2', '') }}" backup=yes
-  register: zookeeper_service_changed
-  with_items:
-    - systemd-zookeeper.j2
-  # notify:
-  #   - Restart zookeeper service
-
-- debug: msg="zookeeper_conf_changed    = {{ zookeeper_conf_changed }}"
-- debug: msg="zookeeper_service_changed = {{ zookeeper_service_changed }}"
