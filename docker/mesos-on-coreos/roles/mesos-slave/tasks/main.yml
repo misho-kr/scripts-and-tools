@@ -1,0 +1,31 @@
+---
+# Deploy Docker Mesos Slave container 
+
+# ---------------------------------------------------------------------
+#  Service 
+# ---------------------------------------------------------------------
+
+- name: Create folder for mesos-slave work and log directories
+  file: path="{{ item }}" state=directory
+  with_items:
+    - "{{ mesos_slave_host_dir }}"
+    - "{{ mesos_slave_work_host_dir }}"
+    - "{{ mesos_slave_log_host_dir }}"
+
+- name: Create systemd service file
+  template: src={{ item }} dest="{{ mesos_slave_host_dir }}/{{ item | replace('.j2', '') }}"
+  with_items:
+    - mesos-slave.service.j2
+  notify:
+    - Copy mesos-slave service systemd file
+    - Enable mesos-slave service
+    - Restart mesos-slave service
+
+# - name: Remove copy of systemd service file
+#   file: name="{{ mesos_slave_host_dir }}/{{ item }}"
+#   with_items:
+#     - mesos-slave.service
+
+# ---------------------------------------------------------------------
+#  Configuration 
+# ---------------------------------------------------------------------

@@ -1,0 +1,9 @@
+---
+
+mesos_slave_host_dir:              "/home/{{ coreos_username }}/mesos-slave"
+
+mesos_slave_work_host_dir:         "{{ mesos_slave_host_dir }}/work"
+mesos_slave_work_container_dir:    "/mesos/work"
+
+mesos_slave_log_host_dir:          "{{ mesos_slave_host_dir }}/log"
+mesos_slave_log_container_dir:     "/mesos/log"

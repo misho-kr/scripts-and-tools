@@ -42,9 +42,9 @@
   roles:
     - { role: mesos-master, tags: master }
 
-# - hosts: mesos-slaves
-#   roles:
-#     - { role: mesos-slave,  tags: slave }
+- hosts: mesos-slaves
+  roles:
+    - { role: mesos-slave,  tags: slave }
 
 # ------------------------------------------------------------------- #
 # eof

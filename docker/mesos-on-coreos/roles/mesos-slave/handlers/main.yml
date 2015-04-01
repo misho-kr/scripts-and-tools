@@ -1,0 +1,14 @@
+---
+
+- name: Copy mesos-slave service systemd file
+  sudo: yes
+  command: cp "{{ mesos_slave_host_dir }}/mesos-slave.service"
+           /etc/systemd/system/mesos-slave.service
+
+- name: Enable mesos-slave service
+  sudo: yes
+  service: name=mesos-slave state=stopped enabled=yes
+
+- name: Restart mesos-slave service
+  sudo: yes
+  service: name=mesos-slave state=restarted

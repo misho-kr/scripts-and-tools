@@ -13,35 +13,37 @@ ansible_ssh_user=core
 ansible_python_interpreter="PATH=/home/core/bin:$PATH python"
 
 [zookeepers]
-coreos-1
-coreos-2
-coreos-3
 
 [mesos-masters]
-coreos-1
-coreos-2
-coreos-3
 
 # slaves ---------------------------------------------------------------
 
 [mesos-slaves:children]
 mesos-only-slaves
 marathon-slaves
+aurora-slaves
+cronos-slaves
 
 [mesos-only-slaves]
-coreos-2
-coreos-4
 
 [marathon-slaves]
-coreos-3
-coreos-5
+
+[aurora-slaves]
+
+[cronos-slaves]
 
 # frameworks -----------------------------------------------------------
 
 [mesos-frameworks:children]
 marathon-schedulers
+aurora-schedulers
+cronos-schedulers
 
 [marathon-schedulers]
+
+[aurora-schedulers]
+
+[cronos-schedulers]
 
 # -----------------------------------------------------------------------
 #                         End of Mesos Cluster

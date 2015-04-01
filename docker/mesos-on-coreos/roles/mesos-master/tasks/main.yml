@@ -21,6 +21,11 @@
     - Enable mesos-master service
     - Restart mesos-master service
 
+# - name: Remove copy of systemd service file
+#   file: name="{{ mesos_master_host_dir }}/{{ item }}"
+#   with_items:
+#     - mesos-master.service
+
 # ---------------------------------------------------------------------
 #  Configuration 
 # ---------------------------------------------------------------------
