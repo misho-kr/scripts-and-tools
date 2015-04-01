@@ -1,0 +1,26 @@
+---
+# Deploy Docker Mesos Master container 
+
+# ---------------------------------------------------------------------
+#  Service 
+# ---------------------------------------------------------------------
+
+- name: Create folder for mesos-master work and log directories
+  file: path="{{ item }}" state=directory
+  with_items:
+    - "{{ mesos_master_host_dir }}"
+    - "{{ mesos_master_work_host_dir }}"
+    - "{{ mesos_master_log_host_dir }}"
+
+- name: Create systemd service file
+  template: src={{ item }} dest="{{ mesos_master_host_dir }}/{{ item | replace('.j2', '') }}"
+  with_items:
+    - mesos-master.service.j2
+  notify:
+    - Copy mesos-master service systemd file
+    - Enable mesos-master service
+    - Restart mesos-master service
+
+# ---------------------------------------------------------------------
+#  Configuration 
+# ---------------------------------------------------------------------

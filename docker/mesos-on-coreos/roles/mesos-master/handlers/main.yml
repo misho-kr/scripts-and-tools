@@ -1,0 +1,16 @@
+---
+
+- name: Copy mesos-master service systemd file
+  sudo: yes
+  command: cp "{{ mesos_master_host_dir }}/mesos-master.service"
+           /etc/systemd/system/mesos-master.service
+
+- name: Enable mesos-master service
+  sudo: yes
+  service: name=mesos-master state=stopped enabled=yes
+  # debug: msg="Enable mesos-master service"
+
+- name: Restart mesos-master service
+  sudo: yes
+  service: name=mesos-master state=restarted
+  # debug: msg="Restart mesos-master service"

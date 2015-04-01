@@ -10,6 +10,10 @@
 
     - { role: download_pypy, tags: download }
 
+# ------------------------------------------------------------------- #
+#  Ansible on CoreOS
+# ------------------------------------------------------------------- #
+
 - hosts: coreos-cluster
   gather_facts: no
 
@@ -26,9 +30,21 @@
 
     - { role: install_pip,  tags: pip  }
 
+# ------------------------------------------------------------------- #
+#  Mesos on CoreOS
+# ------------------------------------------------------------------- #
+
 - hosts: zookeepers
   roles:
-    - { role: zookeeper, tags: zookeeper }
+    - { role: zookeeper,    tags: zookeeper }
+
+- hosts: mesos-masters
+  roles:
+    - { role: mesos-master, tags: master }
+
+# - hosts: mesos-slaves
+#   roles:
+#     - { role: mesos-slave,  tags: slave }
 
 # ------------------------------------------------------------------- #
 # eof

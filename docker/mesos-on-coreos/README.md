@@ -3,7 +3,7 @@ Mesosphere on CoreOS cluster
 
 With ready-to-use Docker images of Zookeeper, Mesos master and sslave, and Marathon framework, all that is needed to bring up a Mesos cluster is a platform to run Docker containers. And that is what [CoreOS](https://coreos.com) is for.
 
-The idea to run thse components in Docker containers and to combine them to form a Mesos cluster came from this blog -- [Mesosphere on a Single CoreOS Instance](https://mesosphere.com/docs/tutorials/mesosphere-on-a-single-coreos-instance). The [Ansible playbook](http://docs.ansible.com/playbooks.html) in this repo automates the process to provision the cluster.
+The idea to run these components in Docker containers and to combine them to form a Mesos cluster came from this blog -- [Mesosphere on a Single CoreOS Instance](https://mesosphere.com/docs/tutorials/mesosphere-on-a-single-coreos-instance). The [Ansible playbook](http://docs.ansible.com/playbooks.html) in this repo automates the process to provision the cluster.
 
 ### Step 1: servers
 

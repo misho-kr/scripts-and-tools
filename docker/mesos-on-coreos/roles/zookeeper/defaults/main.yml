@@ -12,6 +12,3 @@ zookeeper_log_dir:                "{{ zookeeper_volume_container_dir }}/log"
 # the ports for zk servers to communicate with each other
 zookeeper_followers_port:   2888
 zookeeper_election_port:    3888
-
-# the ports for zk clients to communicate with server
-zookeeper_client_port:      2181

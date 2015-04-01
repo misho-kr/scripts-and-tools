@@ -1,0 +1,9 @@
+---
+
+mesos_master_host_dir:              "/home/{{ coreos_username }}/mesos-master"
+
+mesos_master_work_host_dir:         "{{ mesos_master_host_dir }}/work"
+mesos_master_work_container_dir:    "/mesos/work"
+
+mesos_master_log_host_dir:          "{{ mesos_master_host_dir }}/log"
+mesos_master_log_container_dir:     "/mesos/log"
