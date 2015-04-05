@@ -46,6 +46,10 @@
   roles:
     - { role: mesos-slave,  tags: slave }
 
+- hosts: marathon-schedulers
+  roles:
+    - { role: marathon,  tags: marathon }
+
 # ------------------------------------------------------------------- #
 # eof
 #

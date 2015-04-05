@@ -9,6 +9,10 @@
   sudo: yes
   service: name=mesos-master state=stopped enabled=yes
 
+- name: Reload systemd
+  sudo: yes
+  command: systemctl daemon-reload
+
 - name: Restart mesos-master service
   sudo: yes
   service: name=mesos-master state=restarted

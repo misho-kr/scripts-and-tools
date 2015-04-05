@@ -18,6 +18,7 @@
     - mesos-master.service.j2
   notify:
     - Copy mesos-master service systemd file
+    - Reload systemd
     - Enable mesos-master service
     - Restart mesos-master service
 

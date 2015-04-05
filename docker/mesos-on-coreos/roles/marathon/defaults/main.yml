@@ -1,3 +1,5 @@
 ---
 
-marathon_task_launch_timeout:       300000
+marathon_host_dir:                "/home/{{ coreos_username }}/marathon"
+
+marathon_task_launch_timeout:     300000
