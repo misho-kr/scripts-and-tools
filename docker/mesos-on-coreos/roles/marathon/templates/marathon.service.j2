@@ -1,0 +1,24 @@
+[Unit]
+Description=Marathon
+After=docker.service
+Requires=docker.service
+
+[Service]
+Restart=on-failure
+RestartSec=20
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill marathon
+ExecStartPre=-/usr/bin/docker rm marathon
+ExecStartPre=/usr/bin/docker pull {{ docker_image_marathon }}
+ExecStart=/usr/bin/docker run \
+    --name marathon \
+    --net=host \
+      {{ docker_image_marathon }} \
+        --master zk://{{ groups["zookeepers"] | join( ":{0},".format(zookeeper_client_port) )}}:{{ zookeeper_client_port }}//mesos \
+        --zk     zk://{{ groups["zookeepers"] | join( ":{0},".format(zookeeper_client_port) )}}:{{ zookeeper_client_port }}//marathon \
+        --task_launch_timeout {{ marathon_task_launch_timeout }} \
+        --checkpoint
+ExecStop=/usr/bin/docker stop marathon
+
+[Install]
+WantedBy=multi-user.target

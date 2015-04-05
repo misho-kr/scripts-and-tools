@@ -4,11 +4,14 @@
 
 coreos_username:        "core"
 
-# the ports for zk clients to communicate with server
+# port for zk clients to communicate with server
 zookeeper_client_port:      2181
 
-# the ports for mesos slaves to communicate with master
+# port for mesos slaves to communicate with master
 mesos_master_port:          5050
+
+# port for mesos slaves to listen
+mesos_slave_port:           5051
 
 # build config --------------------------------------------------
 
@@ -17,7 +20,9 @@ download_dir:               "{{ playbook_dir }}/download.dir"
 pypy_tarball:               "pypy.tar.bz2"
 get_pip_filename:           "get_pip.py"
 
+# docker images -------------------------------------------------
+
 docker_image_zookeeper:     "jplock/zookeeper:3.4.6"
 docker_image_mesos_master:  "redjack/mesos-master:0.21.0"
 docker_image_mesos_slave:   "redjack/mesos-slave:0.21.0"
-docker_image_marathon:      "mesosphere/marathon:v0.8.1"
+docker_image_marathon:      "mesosphere/marathon:v0.7.5"

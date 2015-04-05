@@ -1,0 +1,14 @@
+---
+
+- name: Copy marathon service systemd file
+  sudo: yes
+  command: cp "{{ mesos_master_host_dir }}/marathon.service"
+           /etc/systemd/system/marathon.service
+
+- name: Enable marathon service
+  sudo: yes
+  service: name=marathon state=stopped enabled=yes
+
+- name: Restart marathon service
+  sudo: yes
+  service: name=marathon state=restarted
