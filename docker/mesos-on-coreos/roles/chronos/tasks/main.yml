@@ -1,0 +1,30 @@
+---
+# Deploy Docker container of Mesos Chronos framework 
+
+# ---------------------------------------------------------------------
+#  Service 
+# ---------------------------------------------------------------------
+
+- name: Create folder for chronos files
+  file: path="{{ item }}" state=directory
+  with_items:
+    - "{{ chronos_host_dir }}"
+
+- name: Create systemd service file
+  template: src={{ item }} dest="{{ chronos_host_dir }}/{{ item | replace('.j2', '') }}"
+  with_items:
+    - chronos.service.j2
+  notify:
+    - Copy chronos service systemd file
+    - Reload systemd
+    - Enable chronos service
+    - Restart chronos service
+
+# - name: Remove copy of systemd service file
+#   file: name="{{ chronos_host_dir }}/{{ item }}"
+#   with_items:
+#     - chronos.service
+
+# ---------------------------------------------------------------------
+#  Configuration 
+# ---------------------------------------------------------------------

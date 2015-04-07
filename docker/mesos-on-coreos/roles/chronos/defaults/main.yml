@@ -1,0 +1,3 @@
+---
+
+chronos_host_dir:               "/home/{{ coreos_username }}/chronos"

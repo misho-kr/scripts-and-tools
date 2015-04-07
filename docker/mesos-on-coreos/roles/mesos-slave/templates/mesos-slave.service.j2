@@ -20,7 +20,7 @@ ExecStart=/usr/bin/docker run \
                 --master=zk://{{ groups["zookeepers"] | join( ":{0},".format(zookeeper_client_port) )}}:{{ zookeeper_client_port }}/mesos \
                 --work_dir={{ mesos_slave_work_container_dir}} \
                 --log_dir={{ mesos_slave_log_container_dir}}
-ExecStop=/usr/bin/docker stop mesos_slave
+ExecStop=/usr/bin/docker stop {{ docker_image_mesos_slave }}
 
 [Install]
 WantedBy=multi-user.target

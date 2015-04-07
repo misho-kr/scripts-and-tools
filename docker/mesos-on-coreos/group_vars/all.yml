@@ -13,6 +13,12 @@ mesos_master_port:          5050
 # port for mesos slaves to listen
 mesos_slave_port:           5051
 
+# port for marathon web ui
+marathon_ui_port:           8081
+
+# port for chronos web ui
+chronos_ui_port:            8082
+
 # build config --------------------------------------------------
 
 download_dir:               "{{ playbook_dir }}/download.dir"
@@ -26,3 +32,4 @@ docker_image_zookeeper:     "jplock/zookeeper:3.4.6"
 docker_image_mesos_master:  "redjack/mesos-master:0.21.0"
 docker_image_mesos_slave:   "redjack/mesos-slave:0.21.0"
 docker_image_marathon:      "mesosphere/marathon:v0.7.5"
+docker_image_chronos:       "tomaskral/chronos:2.3.2-mesos0.21.1"

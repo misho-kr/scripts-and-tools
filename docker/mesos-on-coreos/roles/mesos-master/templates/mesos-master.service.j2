@@ -21,7 +21,7 @@ ExecStart=/usr/bin/docker run \
                 --work_dir={{ mesos_master_work_container_dir}} \
                 --log_dir={{ mesos_master_log_container_dir}} \
                 --quorum={{ groups["mesos-masters"] | quorum_size }}
-ExecStop=/usr/bin/docker stop mesos_master
+ExecStop=/usr/bin/docker stop {{ docker_image_mesos_master }}
 
 [Install]
 WantedBy=multi-user.target

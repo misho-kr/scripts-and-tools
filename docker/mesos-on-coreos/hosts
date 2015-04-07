@@ -37,13 +37,13 @@ cronos-slaves
 [mesos-frameworks:children]
 marathon-schedulers
 aurora-schedulers
-cronos-schedulers
+chronos-schedulers
 
 [marathon-schedulers]
 
 [aurora-schedulers]
 
-[cronos-schedulers]
+[chronos-schedulers]
 
 # -----------------------------------------------------------------------
 #                         End of Mesos Cluster

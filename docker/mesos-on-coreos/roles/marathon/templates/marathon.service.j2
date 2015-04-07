@@ -18,7 +18,7 @@ ExecStart=/usr/bin/docker run \
         --zk     zk://{{ groups["zookeepers"] | join( ":{0},".format(zookeeper_client_port) )}}:{{ zookeeper_client_port }}/marathon \
         --task_launch_timeout {{ marathon_task_launch_timeout }} \
         --checkpoint
-ExecStop=/usr/bin/docker stop marathon
+ExecStop=/usr/bin/docker stop {{ docker_image_marathon }}
 
 [Install]
 WantedBy=multi-user.target

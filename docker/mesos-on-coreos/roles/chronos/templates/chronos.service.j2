@@ -1,0 +1,23 @@
+[Unit]
+Description=ChronosMarathonFramework
+After=docker.service
+Requires=docker.service
+
+[Service]
+Restart=on-failure
+RestartSec=20
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill chronos
+ExecStartPre=-/usr/bin/docker rm chronos
+ExecStartPre=/usr/bin/docker pull {{ docker_image_chronos }}
+ExecStart=/usr/bin/docker run \
+    --name chronos \
+    --net=host \
+      {{ docker_image_chronos }} \
+        --master   zk://{{ groups["zookeepers"] | join( ":{0},".format(zookeeper_client_port) )}}:{{ zookeeper_client_port }}/mesos \
+        --zk_hosts zk://{{ groups["zookeepers"] | join( ":{0},".format(zookeeper_client_port) )}}:{{ zookeeper_client_port }} \
+        --http_port {{ chronos_ui_port }}
+ExecStop=/usr/bin/docker stop {{ docker_image_chronos }}
+
+[Install]
+WantedBy=multi-user.target

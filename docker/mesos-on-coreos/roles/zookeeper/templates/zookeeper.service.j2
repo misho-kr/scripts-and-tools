@@ -16,7 +16,7 @@ ExecStart=/usr/bin/docker run \
       -v {{ zookeeper_conf_host_dir }}:{{ zookeeper_conf_container_dir }} \
       -v {{ zookeeper_volume_host_dir }}:{{ zookeeper_volume_container_dir}} \
         {{ docker_image_zookeeper }}
-ExecStop=/usr/bin/docker stop zookeeper
+ExecStop=/usr/bin/docker stop {{ docker_image_zookeeper }}
 
 [Install]
 WantedBy=multi-user.target
