@@ -1,14 +1,21 @@
 CoreOS cluster on KVM
 =====================
 
-[Ansible playbook](http://docs.ansible.com/playbooks.html) to create a cluster of [CoreOS](https://coreos.com) servers running on KVM virtual machines.
+[Ansible playbook](http://docs.ansible.com/playbooks.html) to create a cluster of [CoreOS](https://coreos.com) servers running on [KVM](http://www.linux-kvm.org) virtual machines.
 
-* [CoreOS](https://coreos.com) is a minimal Linux distribution designed for deployments in cloud infrastructure projects
-* [KVM](http://www.linux-kvm.org) is a popular hypervisor for running virtual machines
+### Motivation
+
+_CoreOS_ can be installed on various platforms hosted by cloud providers or on your computer. In the latter case [Vagrant](http://www.vagrantup.com) is a popular method to [Start a cluster](https://coreos.com/docs/running-coreos/platforms/vagrant) using [VirtualBox](https://www.virtualbox.org).
+
+This playbook was created for two reasons:
+
+* Provision cluster with another popular hypervisor -- KVM
+* Enable custom options in the provisioning process, particularly to use LVM partitions for the VM images
+* Post-installation configuration to setup etcd instances on all VMs
 
 ### Quick start
 
-Creating a cluster of CoreOS machines is as easy as choosing the desired number of machines in the cluster and running one command. The playbook will download stable CoreOS image from the official site, create 3 (by default) KVM virtual machines and bring up the cluster. 
+Creating the cluster is as easy as choosing the desired number of machines in the cluster and running the playbook. It will download stable CoreOS image from the official site, create N (default 3) KVM virtual machines and boot up the cluster. 
 
 ```bash
 $ git clone https://github.com/misho-kr/scripts-and-tools
@@ -19,13 +26,11 @@ $ ansible-playbook create.yml -i hosts
 
 Obviously you need to have [Ansible](http://docs.ansible.com) on your machine in order to run the playbook. Follow the [instuctions in the Ansible documentation](http://docs.ansible.com/intro_installation.html) to install it from distro repositories, from source or with pip.
 
-While the playbook does its thing you can read through this document to understand how to manage the cluster after it is created, and the available configurations options for the _create_ playbbok.
+While the playbook does its thing you can read the next sections to understand how to manage the cluster after it is created, and the available configurations options for your next cluster.
 
 ### Cluster management
 
-There are several Ansible scripts to manage the cluster after it was created, like _list_, _start_, _stop_, etc.
-
-By default the cluster is configured to have 3 virtual machines. This can be changed by passing _vm_count_ argument to the playbook, or by updating the virtual machine count in the main configuration file. This can be done even before the cluster is created. Open [group_vars/all.yml](group_vars/all.yml) for edit and set the right value to the _vm_count_ variable.
+There are several Ansible scripts to manage the cluster after it was created.
 
 #### Start up, Shutdown, Restart 
 
@@ -68,11 +73,13 @@ The variables can be passed to the playbook at the command line, or be set perma
 $ ansible-playbook create.yml -i hosts -e vm_count=9 -e vg_name=lv_coreos
 ```
 
+Note: if you choose non-default number of VMs, open [group_vars/all.yml](group_vars/all.yml) and update the _vm_count_ variable. This will avoid the need to pass _vm_count_ argument to the playbook every time you run _create_ or other management command.
+
 #### Repeated execution
 
 This option is not that useful anymore, but it is handy when troubleshooting some problem.
 
-The playbook consists of several roles which are like seperate steps of the procedure to provision the cluster. Each role has a tag which allows to skip it or select it for exclusive execution. For example to skip the creation of cloud-init file for each virtual machine, request that roles and tasks with _init_ tag be skipped:
+The playbook consists of several roles which are like seperate steps of one big procedure to provision the cluster. Each role has a tag which allows to skip it or select it for exclusive execution. For example to skip the creation of cloud-init file for each virtual machine, request that roles and tasks with _init_ tag be skipped:
 
 ```bash
 $ ansible-playbook -i hosts create.yml -e "vm_count=5" --skip-tags=init
@@ -84,18 +91,22 @@ $ ansible-playbook -i hosts create.yml -e "vm_count=5" --skip-tags=init
 
 The goal of the playbook was to automate many of the cluster provisioning tasks:
 
+* Virtual machines can be created on plain filesystem or on [Logical Volume Manager](https://www.sourceware.org/lvm2/) logical volume
 * _etcd_ cluster can be initialized via either
  * [discovery token](https://coreos.com/docs/cluster-management/setup/cluster-discovery)
  * [explicitly setting the peer hostnames](http://www.chrislunsford.com/blog/2014/08/01/exploring-etcd)
 * If using etcd discovery token, new one will be acquired every time new cluster is provisioned (tokens can be reused)
 * CoreOS image is downloaded only the first time the playbook runs.  The cached image will be reused until it is deleted, or if explicitly requested with the _force_download_ option.
-* Virtual machines can be created on plain filesystem or on [Logical Volume Manager](https://www.sourceware.org/lvm2/) logical volume
 
 ### TODO list
 
 * At the end of provisioning the cluster, create an inventory file with all CoreOS virtual machines listed in it
 * Implement a method to specify the virtual machines by name in the inventory file
-* Currently the virtual machines are given uninspiring names like _coreos-1_, _coreos-2_, etc. It would be great to allow the user to prepare an inventory file with the desired virtial machines and their names, and use that to provision the cluster
+* Currently the virtual machines are given uninspiring names like _coreos-1_, _coreos-2_, etc.
+ * The prefix _coreos_ should be configurable parameter
+ * Even better if user can prepare an inventory file with virtial machines names, and use that to provision the cluster
+* [Fedora]() was used to develop the playbook
+ * Test the playbook on other platforms -- CentOS, Ubuntu, etc.
 
 ### Issues and workarounds
 
