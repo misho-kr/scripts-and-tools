@@ -1,6 +1,10 @@
 CoreOS cluster on KVM
 =====================
 
+## Tombstone
+
+This repo was moved to dedicated repository -- [coreos-cluster-kvm](https://github.com/misho-kr/coreos-cluster-kvm). Please use that repository for up-to-date changes, fixes and improvements.
+
 [Ansible playbook](http://docs.ansible.com/playbooks.html) to create a cluster of [CoreOS](https://coreos.com) servers running on [KVM](http://www.linux-kvm.org) virtual machines.
 
 ### Motivation
@@ -105,7 +109,7 @@ The goal of the playbook was to automate many of the cluster provisioning tasks:
 * Currently the virtual machines are given uninspiring names like _coreos-1_, _coreos-2_, etc.
  * The prefix _coreos_ should be configurable parameter
  * Even better if user can prepare an inventory file with virtial machines names, and use that to provision the cluster
-* [Fedora]() was used to develop the playbook
+* [Fedora](https://getfedora.org) was used to develop the playbook
  * Test the playbook on other platforms -- CentOS, Ubuntu, etc.
 
 ### Issues and workarounds
