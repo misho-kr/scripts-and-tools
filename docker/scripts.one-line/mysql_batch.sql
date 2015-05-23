@@ -8,7 +8,7 @@ MYSQL_PORT=3306
 MYSQL_USER="user"
 MYSQL_PASSWORD=""
 MYSQL_DB="first_db"
-MYSQL_SCRIPT="${HOME}/script.sql"
+MYSQL_SCRIPT="${HOME}/mysql_script.sql"
 MYSQL_VERSION="5.7.5"
 
 while getopts d:f:h:p:s:u:v: opt; do

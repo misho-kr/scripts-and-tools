@@ -1,9 +1,9 @@
 #!/bin/bash
 # -----------------------------------------------------------------
 
-# set -x
+set -x
 
-MYSQL_HOST="localhost"
+MYSQL_HOST="fedora21-docker-6613.lvs01.dev.ebayc3.com"
 MYSQL_PORT=3306
 MYSQL_USER="user"
 MYSQL_PASSWORD=""
@@ -31,7 +31,7 @@ shift $(( OPTIND -1 ))
 exec \
   docker run --name=mysql_cli --rm -it \
     mysql:"${MYSQL_VERSION}" \
-      sh -c "exec mysql -h ${MYSQL_HOST} -P ${MYSQL_PORT} -u${MYSQL_USER} -p${MYSQL_PASSWORD} -D${MYSQL_DB}" $*
+      sh -c "exec mysql -h ${MYSQL_HOST} -P ${MYSQL_PORT} -u${MYSQL_USER} -p${MYSQL_PASSWORD} ${MYSQL_DB}" 
 
 # -----------------------------------------------------------------
 # eof
