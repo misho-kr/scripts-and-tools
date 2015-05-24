@@ -1,0 +1,10 @@
+---
+# ------------------------------------------------------------------- #
+#                Install and Upgrade Docker Components                #
+# ------------------------------------------------------------------- #
+
+- hosts: docker
+  roles:
+
+    - { role: docker,           tags: docker    }
+    - { role: docker-upgrade,   tags: upgrade   }

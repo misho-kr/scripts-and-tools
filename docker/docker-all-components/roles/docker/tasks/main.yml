@@ -1,0 +1,12 @@
+---
+# Docker installation
+
+- include_vars: "docker-{{ ansible_distribution | default('Linux') }}.yml"
+
+- include: install_from_repo.yml
+  when: download_docker_packages == "no"
+
+- include: install_by_download.yml
+  when: download_docker_packages == "yes"
+
+- include: account.yml

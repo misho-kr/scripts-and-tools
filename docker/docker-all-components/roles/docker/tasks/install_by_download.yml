@@ -1,0 +1,61 @@
+---
+# Download and install Docker packages
+
+# download ----------------------------------------------------
+
+- name: create folder for downloaded files
+  connection: local
+  run_once: true
+  file: path="{{ docker_download_dir }}" state=directory
+
+- name: download docker package(s)
+  connection: local
+  run_once: true
+  get_url: url="{{ docker_download_url }}/{{ ansible_distribution }}/{{ ansible_distribution_major_version }}/{{ item }}"
+           dest="{{ docker_download_dir }}/{{ item }}"
+  with_items: docker_download_packages
+
+- name: create folder for transfered files
+  file: path="{{ docker_transfer_dir }}" state=directory
+
+- name: transfer docker package(s)
+  copy: src="{{ docker_download_dir }}/{{ item }}"
+        dest="{{ docker_transfer_dir }}/{{ item }}"
+  with_items: docker_download_packages
+
+# install -----------------------------------------------------
+
+- fail: msg="download docker packages not implemented (tested actually)"
+
+- name: install docker package(s) (yum)
+  sudo: yes
+  yum: name="{{ docker_transfer_dir }}/{{ item.1 }}" state=latest
+  with_indexed_items: docker_download_packages
+  notify:
+    - Enable docker service
+    - Start docker service
+
+# FIXME: installing deb packages will fail if one package depends on other(s)
+
+- name: install docker package(s) (apt)
+  sudo: yes
+  apt: deb="{{ docker_transfer_dir }}/{{ item.1 }}"
+  with_indexed_items: docker_download_packages
+  notify:
+    - Enable docker service
+    - Start docker service
+
+# cleanup -----------------------------------------------------
+
+- name: remove folder with transfered package(s) (remote)
+  file: name="{{ docker_transfer_dir }}" state=absent
+  when: keep_remote_files == "no"
+
+# FIXME: this (local) operations seems to create some sort of race condition
+
+- name: remove downloaded package(s) and folder (local)
+  connection: local
+  run_once: true
+  file: name="{{ docker_download_dir }}/{{ item }}" state=absent
+  with_items: docker_download_packages
+  when: keep_local_files == "no"

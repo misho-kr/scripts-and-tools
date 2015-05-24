@@ -1,0 +1,8 @@
+---
+# Post-installation tasks
+
+- name: Enable docker service
+  service: name={{ docker_service }} enabled=yes
+
+- name: Start docker service
+  service: name={{ docker_service }} state=started

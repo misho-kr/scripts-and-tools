@@ -1,0 +1,36 @@
+---
+# Install Docker from official package repository
+
+# Yum installation --------------------------------------------
+
+- name: install Docker package (yum)
+  sudo: yes
+  yum: name={{ docker_dist_package }} state=latest
+  when: ansible_pkg_mgr == "yum"
+  notify:
+    - Enable docker service
+    - Start docker service
+
+# Apt installation --------------------------------------------
+
+- name: add Docker Debian repository signing key
+  sudo: yes
+  apt_key: data="{{ lookup('file', 'apt-docker.gpg') }}" state=present
+  when: ansible_pkg_mgr == "apt"
+
+- name: add Docker Debian repository
+  sudo: yes
+  apt_repository: repo="{{ docker_deb_repository }}" state=present
+  when: ansible_pkg_mgr == "apt"
+
+# why is "force" required to install dependency packages?
+
+- name: install Docker package (apt)
+  sudo: yes
+  apt: name={{ docker_dist_package }} state=present
+       update_cache=yes
+       force=yes
+  when: ansible_pkg_mgr == "apt"
+  notify:
+    - Enable docker service
+    - Start docker service

@@ -1,0 +1,8 @@
+---
+
+docker_deb_repository:          "deb https://get.docker.com/ubuntu docker main"
+docker_dist_package:            "lxc-docker"
+
+docker_download_packages:
+  - lxc-docker-1.6.0_1.6.0_amd64.deb
+  - lxc-docker_1.6.0_amd64.deb

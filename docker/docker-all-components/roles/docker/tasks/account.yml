@@ -1,0 +1,12 @@
+---
+# Required steps before proceeding with the docker promo service deployment
+
+- name: create Docker group
+  sudo: yes
+  group: name={{ docker_groupname }} state=present
+
+- name: authorize login user to execute docker commands
+  sudo: yes
+  user: name={{ ansible_ssh_user }}
+        groups={{ docker_groupname }}
+        append=yes
