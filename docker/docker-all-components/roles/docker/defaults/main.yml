@@ -6,5 +6,6 @@ docker_groupname:               "docker"
 download_docker_packages:       "no"
 
 docker_download_url:            http://fedora21-docker-6613.lvs01.dev.ebayc3.com:8080/pub/docker
+
 docker_download_dir:            "download.dir"
 docker_transfer_dir:            "transfer.dir"

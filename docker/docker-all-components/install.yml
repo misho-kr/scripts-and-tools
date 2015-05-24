@@ -7,4 +7,3 @@
   roles:
 
     - { role: docker,           tags: docker    }
-    - { role: docker-upgrade,   tags: upgrade   }

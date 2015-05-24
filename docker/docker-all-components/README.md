@@ -70,7 +70,7 @@ This will install the Docker components on the hosts as defined in the inventory
 * By default Ansible will run the playbook in parallel in blocks of 5 hosts each, this can be changed with the "-f" option
 
 ```bash
-$ ansible-playbook -i hosts site.yml -k -K
+$ ansible-playbook -i hosts install.yml -k -K
 SSH password:
 SUDO password[defaults to SSH password]:
 
@@ -91,7 +91,7 @@ my-docker-compose.my-domain.com : ok=7    changed=5    unreachable=0    failed=0
 The normal playbook execution will go through every groups and install the corrsponding Docker components on the hosts in that group. If instead only select Docker components should be installed, use the "-t" flag to restrict the scope of the playbook. The "-t" flag can be used multiple times on the same command line.
 
 ```bash
-$ ansible-playbook -i hosts site.yml -t docker -k -K
+$ ansible-playbook -i hosts install.yml -t docker -k -K
 SSH password:
 SUDO password[defaults to SSH password]:
 

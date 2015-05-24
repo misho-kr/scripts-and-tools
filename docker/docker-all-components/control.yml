@@ -1,0 +1,41 @@
+---
+# --------------------------------------------------------------------- #
+#  Ansible playbook to manage Docker services
+# --------------------------------------------------------------------- #
+#
+#  Service management:  start, stop and restart
+#  Server management:   shutdown and reboot
+#
+# --------------------------------------------------------------------- #
+
+- hosts: docker
+  sudo: yes
+
+  pre_tasks:
+
+    - include_vars: "{{ item }}"
+      tags: [ 'start', 'stop', 'restart' ]
+      with_items:
+        - "roles/docker/defaults/main.yml"
+
+    - include_vars: "{{ item }}"
+      tags: [ 'start', 'stop', 'restart' ]
+      with_first_found:
+        - "roles/docker/vars/docker-{{ ansible_distribution }}.yml"
+        - "roles/docker/vars/docker-{{ ansible_os_family }}.yml"
+        - "roles/docker/vars/docker-Linux.yml"
+
+  tasks:
+
+# FIXME: service stop does not work on Ubuntu 14, fails with below error
+#
+# msg:  * Docker is managed via upstart, try using service docker stop
+#
+
+    - name: Stop service
+      service: name={{ docker_service }} state=stopped
+      tags: [ 'stop', 'restart' ]
+
+    - name: Start service
+      service: name={{ docker_service }} state=started
+      tags: [ 'start', 'restart' ]
