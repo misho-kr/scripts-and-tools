@@ -11,7 +11,7 @@
 - name: download docker compose package
   connection: local
   run_once: true
-  get_url: url="{{ docker_compose_download_url }}/{{ docker_compose_release }}/{{ item }}-{{ ansible_system }}-{{ ansible_architecture }}"
+  get_url: url="{{ docker_compose_download_url }}"
            dest="{{ docker_download_dir }}/{{ item }}"
   with_items:
     - "{{ docker_compose_command }}"

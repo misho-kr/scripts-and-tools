@@ -1,7 +1,7 @@
 ---
 
 download_docker_packages:       "no"
-download_docker_compose:        "no"
+download_docker_compose:        "yes"
 
 docker_download_dir:            "download.dir"
 docker_transfer_dir:            "transfer.dir"
