@@ -11,20 +11,20 @@
 - name: download docker compose package
   connection: local
   run_once: true
-  get_url: url="{{ docker_compose_download_url }}"
-           dest="{{ docker_download_dir }}/{{ item }}"
+  get_url: url="{{ item.0 }}"
+           dest="{{ docker_download_dir }}/{{ item.1 }}"
   with_items:
-    - "{{ docker_compose_command }}"
+    - "{{ docker_compose_downloads }}"
 
 # install -----------------------------------------------------
 
 - name: transfer/install docker compose package
   sudo: yes
-  copy: src="{{ docker_download_dir }}/{{ item }}"
-        dest="{{ docker_compose_install_dir }}/{{ item }}"
+  copy: src="{{ docker_download_dir }}/{{ item.1 }}"
+        dest="{{ item.2 }}"
         mode="u+w,a+rx" owner="root" group="root"
   with_items:
-    - "{{ docker_compose_command }}"
+    - "{{ docker_compose_downloads }}"
 
 # cleanup -----------------------------------------------------
 
@@ -33,7 +33,7 @@
 - name: remove downloaded package(s) and folder (local)
   connection: local
   run_once: true
-  file: name="{{ docker_download_dir }}/{{ item }}" state=absent
+  file: name="{{ docker_download_dir }}/{{ item.1 }}" state=absent
   when: keep_local_files == "no"
   with_items:
-    - "{{ docker_compose_command }}"
+    - "{{ docker_compose_downloads }}"

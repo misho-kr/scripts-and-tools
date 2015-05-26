@@ -1,11 +1,20 @@
 ---
 
 docker_compose_command:         "docker-compose"
-docker_compose_install_dir:     "/usr/local/bin"
-
 docker_compose_release:         "1.2.0"
 
 docker_compose_base_url:        "https://github.com/docker/compose/releases/download"
 docker_compose_download_url:    "{{ docker_compose_base_url }}/{{ docker_compose_release }}/{{ docker_compose_command }}-{{ ansible_system }}-{{ ansible_architecture }}"
+
+docker_compose_completion_base_url:        "https://raw.githubusercontent.com/docker/compose"
+docker_compose_completion_download_url:     "{{ docker_compose_completion_base_url }}/{{ docker_compose_release }}/contrib/completion/bash/{{ docker_compose_command }}"
+
+# array of: download-url, filename, destination
+
+docker_compose_downloads:
+  - [ "{{ docker_compose_download_url }}", "{{ docker_compose_command }}", "/usr/local/bin/{{ docker_compose_command }}" ]
+  - [ "{{ docker_compose_completion_download_url }}", "{{ docker_compose_command }}.bash_completion", "/etc/bash_completion.d/{{ docker_compose_command }}" ]
+
+# in case of pip-install
 
 docker_compose_pip_package:     "docker-compose"
