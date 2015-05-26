@@ -1,5 +1,10 @@
 ---
 
-keep_local_files:     "no"
-keep_remote_files:    "no"
+download_docker_packages:       "no"
+download_docker_compose:        "no"
 
+docker_download_dir:            "download.dir"
+docker_transfer_dir:            "transfer.dir"
+
+keep_local_files:     "yes"
+keep_remote_files:    "no"

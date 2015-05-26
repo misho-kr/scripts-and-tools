@@ -1,0 +1,24 @@
+---
+# Pip-install Docker Compose
+
+# Pip installation ------------------------------------------
+
+- name: install python pip (yum)
+  sudo: yes
+  yum: name={{ pip_package_name }} state=latest
+  when: ansible_pkg_mgr == "yum"
+
+# why is "force" required to install dependency packages?
+
+- name: install python pip (apt)
+  sudo: yes
+  apt: name={{ pip_package_name }} state=latest
+       update_cache=yes
+       force=yes
+  when: ansible_pkg_mgr == "apt"
+
+# Docker Compose installation -------------------------------
+
+- name: (pip) install docker compose package
+  sudo: yes
+  pip: name={{ docker_compose_pip_package }} state=latest

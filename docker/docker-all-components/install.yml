@@ -7,3 +7,8 @@
   roles:
 
     - { role: docker,           tags: docker    }
+
+- hosts: compose
+  roles:
+
+    - { role: compose,          tags: compose    }

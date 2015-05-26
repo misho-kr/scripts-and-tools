@@ -1,0 +1,39 @@
+---
+# Download and install Docker Compose
+
+# download ----------------------------------------------------
+
+- name: create folder for downloaded files
+  connection: local
+  run_once: true
+  file: path="{{ docker_download_dir }}" state=directory
+
+- name: download docker compose package
+  connection: local
+  run_once: true
+  get_url: url="{{ docker_compose_download_url }}/{{ docker_compose_release }}/{{ item }}-{{ ansible_system }}-{{ ansible_architecture }}"
+           dest="{{ docker_download_dir }}/{{ item }}"
+  with_items:
+    - "{{ docker_compose_command }}"
+
+# install -----------------------------------------------------
+
+- name: transfer/install docker compose package
+  sudo: yes
+  copy: src="{{ docker_download_dir }}/{{ item }}"
+        dest="{{ docker_compose_install_dir }}/{{ item }}"
+        mode="u+w,a+rx" owner="root" group="root"
+  with_items:
+    - "{{ docker_compose_command }}"
+
+# cleanup -----------------------------------------------------
+
+# FIXME: this (local) operations seems to create some sort of race condition
+
+- name: remove downloaded package(s) and folder (local)
+  connection: local
+  run_once: true
+  file: name="{{ docker_download_dir }}/{{ item }}" state=absent
+  when: keep_local_files == "no"
+  with_items:
+    - "{{ docker_compose_command }}"

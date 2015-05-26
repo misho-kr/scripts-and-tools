@@ -1,5 +1,5 @@
 ---
-# Docker installation
+# Docker Compose installation
 
 - include_vars: "{{ item }}"
   with_first_found:
@@ -7,10 +7,8 @@
     - "{{ ansible_os_family }}.yml"
     - "Linux.yml"
 
-- include: install_from_repo.yml
-  when: download_docker_packages == "no"
-
 - include: install_by_download.yml
-  when: download_docker_packages == "yes"
+  when: download_docker_compose == "yes"
 
-- include: account.yml
+- include: install_with_pip.yml
+  when: download_docker_compose != "yes"
