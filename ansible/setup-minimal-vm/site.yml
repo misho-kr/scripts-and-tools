@@ -12,9 +12,9 @@
 
   roles:
 
-    - passwordless_login
-    - { role: sudoers_extra, sudo: yes }
-    - { role: ssh_setup, sudo: yes }
+#    - passwordless_login
+#    - { role: sudoers_extra, sudo: yes }
+#    - { role: ssh_setup, sudo: yes }
     - profile_settings
     
   tasks:
