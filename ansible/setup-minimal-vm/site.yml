@@ -6,18 +6,24 @@
 - hosts: all
   remote_user: "{{ nonroot_user }}"
 
+  roles:
+
+    - passwordless_login
+
+- hosts: all
+  remote_user: "{{ nonroot_user }}"
+  sudo: yes
+
 # --------------------------------------------------------
 #  Update sudo setup
 # --------------------------------------------------------
 
   roles:
 
-    - passwordless_login
-    - { role: sudoers_extra, sudo: yes }
-    - { role: ssh_setup, sudo: yes }
+    - sudoers_extra
+    - ssh_setup
     - profile_settings
-    
+
   tasks:
 
     - include: tasks/package_install.yml
-      sudo: yes

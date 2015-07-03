@@ -10,7 +10,7 @@ my_public_key_file:   ".ssh/id_rsa.pub"
 
 deb_repos:      [ 'ppa:cpick/pam-ssh-agent-auth' ]
 packages: {
-  'all':        [ 'unzip' ],
+  'all':        [ 'unzip', 'bind-utils', 'nmap-ncat' ],
   'RedHat':     [ 'emacs-nox', 'pam_ssh_agent_auth' ],
   'Debian':     [ 'emacs24-nox', 'pam-ssh-agent-auth' ],
 }

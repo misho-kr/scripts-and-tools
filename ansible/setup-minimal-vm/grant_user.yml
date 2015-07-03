@@ -1,6 +1,6 @@
 ---
 # ----------------------------------------------------------------------
-#  Case 2: user account exist but has no sudo priviliges
+#  Case 2: user account exist but has no sudo privileges, use /bin/su
 # ----------------------------------------------------------------------
 
 - hosts: hosts_without_user
@@ -13,6 +13,7 @@
 
   roles:
 
-    - { role: sudoers, make_sudo_user: "{{ nonroot_user }}", tags: create-sudo-user }
+    - { role: sudoers, make_sudo_user: "{{ nonroot_user }}" }
+
     - passwordless_login
     - sudoers_extra

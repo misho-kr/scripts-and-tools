@@ -5,15 +5,14 @@
 [all:children]
 hosts_without_user
 grant_user
-update_user
+setup_only
 
 [hosts_without_user]
 
 [grant_user]
 
-[update_user]
-# not used at this time
-
+[setup_only]
+]
 # -----------------------------------------------------------------------
 # eof
 #

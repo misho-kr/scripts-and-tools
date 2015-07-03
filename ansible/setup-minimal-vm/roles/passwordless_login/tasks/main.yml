@@ -1,15 +1,15 @@
 ---
 
 - name: Add predefined RSA public for password-less login
-  when: not use_my_public_key | bool
   authorized_key: state=present user={{ nonroot_user }}
                   key="{{ item }}"
                   manage_dir=yes
+  when: not use_my_public_key | bool
   with_file:
     - id_rsa.pub
 
 - name: Add RSA public key of current user for password-less login
-  when: use_my_public_key | bool
   authorized_key: state=present user={{ nonroot_user }}
                   key="{{ lookup('file', home_dir + "/" + my_public_key_file ) }}"
                   manage_dir=yes
+  when: use_my_public_key | bool
