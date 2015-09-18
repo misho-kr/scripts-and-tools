@@ -4,4 +4,4 @@ ssh_auth_packages: {
   'Debian':     [ 'pam-ssh-agent-auth' ],
 }
 
-ssh_auth_repos:          [ 'ppa:cpick/pam-ssh-agent-auth' ]
+ssh_auth_repos:     [ 'ppa:cpick/pam-ssh-agent-auth' ]

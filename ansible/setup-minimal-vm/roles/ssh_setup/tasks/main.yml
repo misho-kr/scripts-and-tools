@@ -1,13 +1,15 @@
 ---
 # Modify sshd server settings
 
+# disable all authentication methods --------------------------
+
 - name: Disable root SSH access
   lineinfile: dest=/etc/ssh/sshd_config state=present
               regexp="^PermitRootLogin"
               line="PermitRootLogin no"
   notify:
     - restart ssh service
- 
+
 - name: Disable SSH password authentication
   lineinfile: dest=/etc/ssh/sshd_config state=present
               regexp="^PasswordAuthentication"
@@ -19,5 +21,14 @@
   lineinfile: dest=/etc/ssh/sshd_config state=present
               regexp="^GSSAPIAuthentication"
               line="GSSAPIAuthentication no"
+  notify:
+    - restart ssh service
+
+# except public key authentication ----------------------------
+
+- name: Enable Public Key authentication
+  lineinfile: dest=/etc/ssh/sshd_config state=present
+              regexp="^PubkeyAuthentication"
+              line="PubkeyAuthentication yes"
   notify:
     - restart ssh service

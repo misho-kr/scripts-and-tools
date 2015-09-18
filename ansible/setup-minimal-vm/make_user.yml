@@ -1,6 +1,6 @@
 ---
 # ----------------------------------------------------------------------
-#  Case 1: user account does not exist
+#  Case 1: user account does not exist, ssh directly to root
 # ----------------------------------------------------------------------
 
 - hosts: hosts_without_user
@@ -13,9 +13,10 @@
   pre_tasks:
 
     - name: Add non-root user account
-      user: name={{ nonroot_user }} password={{ nonroot_user_passwd }}
+      user: name={{ nonroot_user }}
+            password={{ nonroot_user_passwd }}
             comment="Non-root account for remote operations"
-      tags: create-sudo-user
+            update_password="on_create"
 
 # --------------------------------------------------------
 #  Grant sudo priviliges
@@ -23,6 +24,7 @@
 
   roles:
 
-    - { role: sudoers, make_sudo_user: "{{ nonroot_user }}", tags: create-sudo-user }
+    - { role: sudoers, make_sudo_user: "{{ nonroot_user }}" }
+
     - passwordless_login
     - sudoers_extra
