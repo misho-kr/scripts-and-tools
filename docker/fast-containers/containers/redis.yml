@@ -19,7 +19,7 @@ redis2:
   expose:
    - "6379"
   volumes:
-   - ~/redis.dir:/data
+   - ../data/redis.dir:/data
   restart: always
   cpu_shares: 512
   mem_limit:  128M

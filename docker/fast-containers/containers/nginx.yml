@@ -8,9 +8,9 @@ nginx:
   expose:
    - "8080"
   volumes:
-   - ~/nginx.dir:/usr/share/nginx:ro
-   - ~/nginx.cache:/var/cache/nginx
-   - ~/etc/nginx-fileserver.conf:/etc/nginx/conf.d/default.conf:ro
+   - ../nginx.dir:/usr/share/nginx:ro
+   - ../data/nginx.cache:/var/cache/nginx
+   - ../etc/nginx-fileserver.conf:/etc/nginx/conf.d/default.conf:ro
   restart: always
   cpu_shares: 128
   mem_limit:  128M

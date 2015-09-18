@@ -8,7 +8,7 @@ tomcat6:
   expose:
    - "8888"
   volumes:
-   - ~/etc/tomcat-users.xml:/usr/local/tomcat/conf/tomcat-users.xml:ro
+   - ../etc/tomcat-users.xml:/usr/local/tomcat/conf/tomcat-users.xml:ro
   restart: always
   cpu_shares: 512
   mem_limit:  256M

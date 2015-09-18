@@ -9,7 +9,7 @@ mongo26:
   expose:
    - "21017"
   volumes:
-   - ~/mongo.db:/data/db
+   - ../data/mongo.db:/data/db
   restart: always
   cpu_shares: 512
   mem_limit:  128M
