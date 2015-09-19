@@ -3,13 +3,14 @@ Useful Docker Containers
 
 Dockerized servers, databases, web servers, etc.
 
-Better to pull a Docker image and start a container, instead of installing a software package that will clutter the server machine and run it as regular (unrestricted) process.
+Better to pull a Docker image and start a container, instead of installing a software package that clutters the server machine and to run it as regular (unrestricted) process.
 
 * MongoDB
 * MySQL
 * Nginx
 * Redis
 * Tomcat
+* Zabbix
 
 ### Usage
 
