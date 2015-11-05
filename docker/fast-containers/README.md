@@ -25,3 +25,11 @@ ba249489d0b6: Pull complete
 ...
 mongo26_1 | 2015-09-18T03:18:32.354+0000 [initandlisten] waiting for connections on port 27017
 ```
+
+### SELinux requirement
+
+Most of the containers will mount the __data__ directory to preserve the state (any data and log file) after shutdown. On systems with [SELinux](https://en.wikipedia.org/wiki/Security-Enhanced_Linux) in enforcing mode [the bind-mount will fail](http://www.projectatomic.io/blog/2015/06/using-volumes-with-docker-can-cause-problems-with-selinux) unless this command has been executed in advance:
+
+```bash
+$ chcon -Rt svirt_sandbox_file_t data
+```
