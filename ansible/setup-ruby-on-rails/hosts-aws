@@ -1,0 +1,9 @@
+# ----------------------------------------------------------------------------
+
+[ruby-dev]
+ec2-52-24-3-214.us-west-2.compute.amazonaws.com
+
+[ruby-dev:vars]
+ansible_ssh_user = fedora
+
+

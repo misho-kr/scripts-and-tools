@@ -1,0 +1,101 @@
+---
+# --------------------------------------------------------------------------
+#      Ansible playbook to set up Ruby on Rails development environment
+# --------------------------------------------------------------------------
+
+- hosts: ruby-dev
+  gather_facts: no
+
+  vars:
+
+    do_min_install:	False
+    packages:           
+      python
+      python2-dnf
+      yum-utils
+      libselinux-python
+
+  tasks:
+
+    - name: install minimum required packages with CLI command
+      sudo: yes
+      raw: dnf -y install {{ packages }}
+      when: do_min_install | bool
+
+- hosts: ruby-dev
+
+  vars:
+    prerequisites:
+      - git
+      - gitk
+      - git-gui
+      - nodejs
+    build_tools:
+      - gcc 
+      - gcc-c++ 
+      - libpqxx-devel
+      - openssl-devel
+      - readline-devel
+      - sqlite-devel
+      - zlib-devel
+      - make
+      - patch
+      - bzip2
+
+    rbenv_repo:			git://github.com/sstephenson/rbenv.git
+    rbenv_install_repo:		git://github.com/sstephenson/ruby-build.git
+    phantom_js_repo:		https://bitbucket.org/ariya/phantomjs/downloads/
+    phantom_js_name:		phantomjs-1.9.8-linux-x86_64
+
+    bashrc_addons:
+      - export RECIPEPUPPY_HOSTPORT=www.recipepuppy.com:80
+      - export PATH=\"$HOME/.rbenv/bin:$PATH\"
+      - export PATH=\"$HOME/.rbenv/plugins/ruby-build/bin:$PATH\"
+      - eval \"$(rbenv init -)\"
+
+    ruby_version:      2.2.2
+    rails_version:     4.2.3
+
+  tasks:
+
+    - name: update all packages
+      sudo: yes
+      dnf:  name=* state=latest
+
+    - name: install prerequisite packages
+      sudo: yes
+      dnf: name="{{ item }}" state=latest
+      with_items: prerequisites
+
+    - name: install build tools packages
+      sudo: yes
+      dnf: name="{{ item }}" state=latest
+      with_items: build_tools
+
+    - name: clone the rbenv git repo into ~/.rbenv
+      git: repo={{ rbenv_repo }} dest="{{ ansible_user_dir }}/.rbenv" accept_hostkey=yes
+
+    - name: add the install command to rbenv
+      git: repo={{ rbenv_install_repo }} dest="{{ ansible_user_dir }}/.rbenv/plugins/ruby-build" accept_hostkey=yes
+
+    - name: update bashrc file
+      lineinfile: dest="{{ ansible_user_dir }}/.bashrc" line="{{ item }}" state=present insertafter=EOF
+      with_items: bashrc_addons
+
+    - name: install a Ruby version (could be others)
+      command: rbenv install -v {{ ruby_version }}
+
+    - name: set the global version of Ruby to use
+      command: rbenv global {{ ruby_version }}
+
+    - name: gems should not generate local documentation (and eat space and time)
+      lineinfile: dest="{{ ansible_user_dir }}/.gemrc" line="gem{{':'}} --no-document" state=present create=yes
+
+    - name: install bundler
+      command: gem install bundler
+
+    - name: install Rails, this step will take a ~5min to complete (as it warns)
+      command: gem install rails -v {{ rails_version }}
+
+    - name: install shims for newly installed Ruby gems that provide commands
+      command: rbenv rehash
