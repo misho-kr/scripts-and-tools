@@ -12,7 +12,7 @@ Ansible playbook to set up Ruby on Rails development environment,
 $ ansible-playbook -i hosts setup.yml
 ```
 
-Note that the Ruby build step may take quite a while -- up to 30 minutes, so be patient.
+Note that the Ruby build step may take quite a while -- up to 30 minutes, so be patient. In practice it is usually less than 5 minutes.
 
 ### TODO
 
