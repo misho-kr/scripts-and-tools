@@ -41,6 +41,10 @@
       - make
       - patch
       - bzip2
+    extra:
+      - emacs-nox
+      - zip
+      - unzip
 
     rbenv_repo:			git://github.com/sstephenson/rbenv.git
     rbenv_install_repo:		git://github.com/sstephenson/ruby-build.git
@@ -54,7 +58,7 @@
     sublime_text_url:		http://c758482.r82.cf2.rackcdn.com
     sublime_text_name:		"Sublime%20Text%202.0.2%20x64"
     sublime_text_dest:		/usr/local
-    sublime_text_extract_dir:	"Sublime Text 2"
+    sublime_text_extract_dir:	"Sublime\ Text\ 2"
     sublime_text_dir:		SublimeText2
     sublime_text_download_dest:	/tmp
 
@@ -76,15 +80,10 @@
       sudo: yes
       dnf:  name=* state=latest
 
-    - name: install prerequisite packages
+    - name: install prerequisite, build tools and extra packages
       sudo: yes
       dnf: name="{{ item }}" state=latest
-      with_items: prerequisites
-
-    - name: install build tools packages
-      sudo: yes
-      dnf: name="{{ item }}" state=latest
-      with_items: build_tools
+      with_items: prerequisites + build_tools + extra
 
     - name: clone the rbenv git repo into ~/.rbenv
       git: repo={{ rbenv_repo }} dest="{{ ansible_user_dir }}/.rbenv" accept_hostkey=yes
