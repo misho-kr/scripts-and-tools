@@ -1,0 +1,5 @@
+
+ruby_version:           2.2.2
+rails_version:          4.2.3
+
+phantom_js_name:        phantomjs-1.9.8-linux-x86_64

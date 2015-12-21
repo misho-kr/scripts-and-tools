@@ -1,0 +1,8 @@
+---
+
+do_min_install:             true
+distro:                     fedora
+
+min_packages:
+  fedora_dnf:             [ "python", "python2-dnf", "yum-utils", "libselinux-python" ]
+  fedora_yum:             [ "python", "yum-utils", "libselinux-python" ]

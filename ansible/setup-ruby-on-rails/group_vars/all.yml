@@ -1,0 +1,4 @@
+
+fedora_release_file:        /etc/fedora-release
+
+fedora_version_uses_dnf:    23

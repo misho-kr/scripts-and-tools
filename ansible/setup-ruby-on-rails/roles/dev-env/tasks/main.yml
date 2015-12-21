@@ -1,0 +1,5 @@
+---
+# Install common dev packages
+
+- include: install_fedora.yml
+  when: ansible_distribution == "Fedora"

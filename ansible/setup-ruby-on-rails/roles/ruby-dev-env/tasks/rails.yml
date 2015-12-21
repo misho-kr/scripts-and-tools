@@ -1,0 +1,10 @@
+---
+
+- name: install bundler
+  command: gem install bundler
+
+- name: install Rails, this step will take a ~5min to complete (as it warns)
+  command: gem install rails -v {{ rails_version }}
+
+- name: install shims for newly installed Ruby gems that provide commands
+  command: rbenv rehash

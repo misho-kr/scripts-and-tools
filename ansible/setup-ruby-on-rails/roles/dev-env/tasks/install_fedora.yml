@@ -1,0 +1,32 @@
+---
+# Install common packags on Fedora
+
+# DNF ---------------------------------------------------------
+
+- name: update all packages
+  sudo: yes
+  dnf:  name=* state=latest
+  when: ansible_distribution_major_version >= fedora_version_uses_dnf
+
+- name: install prerequisite, build tools and extra packages
+  sudo: yes
+  dnf: name="{{ item }}" state=latest
+  with_items: packages[ ansible_distribution ][ 'prerequisites' ] +
+              packages[ ansible_distribution ][ 'build_tools'   ] +
+              packages[ ansible_distribution ][ 'extra'         ]
+  when: ansible_distribution_major_version >= fedora_version_uses_dnf
+
+# YUM ---------------------------------------------------------
+
+- name: update all packages
+  sudo: yes
+  yum:  name=* state=latest
+  when: ansible_distribution_major_version < fedora_version_uses_dnf
+
+- name: install prerequisite, build tools and extra packages
+  sudo: yes
+  yum: name="{{ item }}" state=latest
+  with_items: packages[ ansible_distribution ][ 'prerequisites' ] +
+              packages[ ansible_distribution ][ 'build_tools'   ] +
+              packages[ ansible_distribution ][ 'extra'         ]
+  when: ansible_distribution_major_version < fedora_version_uses_dnf

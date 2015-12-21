@@ -1,0 +1,23 @@
+
+packages:
+  Fedora:
+    prerequisites:
+      - git
+      - gitk
+      - git-gui
+      - nodejs
+    build_tools:
+      - gcc
+      - gcc-c++
+      - libpqxx-devel
+      - openssl-devel
+      - readline-devel
+      - sqlite-devel
+      - zlib-devel
+      - make
+      - patch
+      - bzip2
+    extra:
+      - emacs-nox
+      - zip
+      - unzip

@@ -1,0 +1,7 @@
+---
+# Install Ruby and Ruby dev tool
+
+- include: rbenv.yml
+- include: ruby.yml
+- include: rails.yml
+- include: phantom-js.yml

@@ -1,0 +1,5 @@
+---
+# Install Python and other packages required by Ansible
+
+- include: install_fedora.yml
+  when: distro == "fedora"
