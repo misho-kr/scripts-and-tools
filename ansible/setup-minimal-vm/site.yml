@@ -3,14 +3,24 @@
 #  Case 3: user account exist and has sudo priviliges
 # ----------------------------------------------------------------------
 
-- hosts: all
+# --------------------------------------------------------
+#  Miniman install (python, etc)
+# --------------------------------------------------------
+
+- hosts: setup_only
+  remote_user: "{{ nonroot_user }}"
+  gather_facts: no
+
+  roles:
+    - { role: min-install, when: do_min_install }
+
+- hosts: setup_only
   remote_user: "{{ nonroot_user }}"
 
   roles:
-
     - passwordless_login
 
-- hosts: all
+- hosts: setup_only
   remote_user: "{{ nonroot_user }}"
   sudo: yes
 

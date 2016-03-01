@@ -1,0 +1,35 @@
+---
+# Figure out the Linux distro
+
+# Fedora ------------------------------------------------------
+
+- name: detect Fedora
+  raw: ls {{ fedora_release_file }}
+  register: is_fedora
+  ignore_errors: true
+
+- set_fact:
+    distro: "fedora"
+  when: is_fedora.rc == 0
+
+# RedHat ------------------------------------------------------
+
+- name: detect RedHat
+  raw: ls {{ redhat_release_file }}
+  register: is_redhat
+  ignore_errors: true
+
+- set_fact:
+    distro: "redhat"
+  when: is_redhat.rc == 0
+
+# Ubuntu -------------------------------------------------------
+
+- name: detect Ubuntu
+  raw: lsb_release | cut -f2 | grep -i ubuntu
+  register: is_ubuntu
+  ignore_errors: true
+
+- set_fact:
+    distro: "ubuntu"
+  when: is_ubuntu.rc == 0

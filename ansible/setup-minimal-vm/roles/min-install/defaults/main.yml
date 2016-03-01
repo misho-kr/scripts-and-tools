@@ -1,0 +1,13 @@
+---
+
+do_min_install:             true
+distro:                     "*tbd*"
+
+fedora_release_file:        /etc/fedora-release
+redhat_release_file:        /etc/redhat-release
+
+fedora_version_uses_dnf:    23
+
+min_packages:
+  fedora_dnf:             [ "python", "python2-dnf", "yum-utils", "libselinux-python" ]
+  fedora_yum:             [ "python", "yum-utils", "libselinux-python" ]

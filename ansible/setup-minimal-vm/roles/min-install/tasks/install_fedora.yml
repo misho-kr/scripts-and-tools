@@ -1,0 +1,30 @@
+---
+# Install required packages on Fedora Linux
+
+- name: determine Fedora release
+  raw: cut -d" " -f3 {{ fedora_release_file }}
+  register: fedora_release
+  ignore_errors: true
+
+- name: report error if target machine is not Fedora
+  fail: msg="Target machine is not Fedora"
+  when: fedora_release.rc != 0
+
+- set_fact:
+    fedora_version: "{{ fedora_release.stdout | int }}"
+
+# Fedora 22 and lower use yum ----------------------------
+
+- name: (yum) install minimum required packages with CLI command
+  sudo: yes
+  raw: yum -y install {{ item }}
+  with_items: min_packages[ "fedora_yum" ]
+  when: fedora_version < fedora_version_uses_dnf
+
+# Fedora 23 and higher use DNF ---------------------------
+
+- name: (dnf) install minimum required packages with CLI command
+  sudo: yes
+  raw: dnf -y install {{ item }}
+  with_items: min_packages[ "fedora_dnf" ]
+  when: fedora_version >= fedora_version_uses_dnf

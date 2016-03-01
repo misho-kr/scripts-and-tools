@@ -1,0 +1,8 @@
+---
+# Install Python and other packages required by Ansible
+
+- include: detect_distro.yml
+  when: distro == "*tbd*"
+
+- include: install_fedora.yml
+  when: distro == "fedora"

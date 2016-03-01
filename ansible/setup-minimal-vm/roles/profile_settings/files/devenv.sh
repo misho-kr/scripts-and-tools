@@ -15,6 +15,7 @@ alias ltr='ls -ltr'
 alias e='enox'
 
 alias d='docker'
+alias docker='sudo docker'
 alias dcp='docker-compose'
 alias g='git'
 alias vir='vi -R'
