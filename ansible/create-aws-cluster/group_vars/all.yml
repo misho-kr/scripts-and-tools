@@ -1,0 +1,8 @@
+---
+# Cloud provisioning config
+
+# all new VMs will be added to this group
+cloud_inventory_group:      cloud
+
+# Test connection VMs by probing <ssh> port
+vm_wait_for_port:       22

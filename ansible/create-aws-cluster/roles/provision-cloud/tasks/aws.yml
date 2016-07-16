@@ -1,0 +1,72 @@
+---
+# Provision EC2 instances on AWS
+
+# ---------------------------------------------------------------------
+#  query
+
+- name: query AWS for EC2 instances
+  ec2_remote_facts:
+    filters: "{{ vm_tags | combine(ec2_tags) | vm_tags_2_aws_filters }}"
+    region: "{{ aws_region }}"
+  register: ec2_instances
+
+- set_fact:
+    ec2_count: "{{ ec2_instances.instances | length }}"
+- set_fact:
+    ec2_count_to_create: "{{ vm_count - ec2_count|int }}"
+
+- name: add existing EC2 instances to inventory
+  add_host: name="{{ item[ ec2_instance_name_attr ] }}"
+            groups="{{ cloud_inventory_group }}"
+            ansible_user="{{ ec2_user }}"
+  with_items: "{{ ec2_instances.instances }}"
+
+# ---------------------------------------------------------------------
+#  create
+
+- name: launch EC2 instances
+  ec2:
+    keypair="{{ aws_keypair }}"
+    group="{{ ec2_security_group }}"
+    type="{{ ec2_instance_type }}"
+    image="{{ ec2_image }}"
+    region="{{ aws_region }}"
+    instance_tags="{{ vm_tags | combine(ec2_tags) }}"
+    count="{{ ec2_count_to_create }}"
+    vpc_subnet_id="{{ aws_vpc_subnet }}"
+    wait=true
+  register: ec2_new_instances
+  when: "{{ ec2_count_to_create > 0 }}"
+
+- name: Wait for new EC2 instances to come up
+  wait_for: host={{ item[ ec2_new_instance_name_attr ] }}
+            port={{ vm_wait_for_port }}
+            timeout={{ aws_ec2_create_timeout }}
+            state=started
+  with_items: "{{ ec2_new_instances.instances }}"
+  when: "{{ ec2_count_to_create > 0 }}"
+
+- name: add new EC2 instances to inventory
+  add_host: name="{{ item[ ec2_new_instance_name_attr ] }}"
+            groups="{{ cloud_inventory_group }}"
+            ansible_user="{{ ec2_user }}"
+  with_items: "{{ ec2_new_instances.instances }}"
+  when: "{{ ec2_count_to_create > 0 }}"
+
+# ---------------------------------------------------------------------
+#  start
+
+- name: start existing EC2 instances
+  ec2:
+    instance_ids="{{ ['id'] | map('extract', item ) | list }}"
+    region="{{ aws_region }}"
+    state=running
+    wait=true
+  with_items: "{{ ec2_instances.instances }}"
+
+- name: Wait for existing EC2 instances to come up
+  wait_for: host={{ item[ ec2_instance_name_attr ] }}
+            port={{ vm_wait_for_port }}
+            timeout={{ aws_ec2_startup_timeout }}
+            state=started
+  with_items: "{{ ec2_instances.instances }}"

@@ -1,0 +1,7 @@
+---
+# Provision Virtul Machine(s) with chosen cloud provider
+
+- include_vars: "group_vars/{{ cloud | default('nocloud') }}.yml"
+
+- include: aws.yml
+  when: cloud == "aws"
