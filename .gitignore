@@ -1,6 +1,7 @@
 *~
 *#
 *.swp
+*.retry
 target
 
 .DS_Store

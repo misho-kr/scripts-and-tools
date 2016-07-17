@@ -54,6 +54,6 @@ You can not create VMs on multiple could providers in the same playbook executio
 ### ToDo
 
 * Expland the playbook to support VM provisioning on other clouds
-* ~~Add check for python2 on the provisioned VMs -- required for executing Ansible playbook on them~~
+* ~~Add check for python2 on the provisioned VMs -- required for executing Ansible playbooks~~
 * Extend the playbook to delete VMs if the number of discovered resources is greater than what is desired
-* Generate inventory file from template
+* Generate inventory file from template with all provisioned VMs

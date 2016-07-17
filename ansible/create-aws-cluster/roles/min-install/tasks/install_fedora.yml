@@ -21,6 +21,7 @@
   raw: yum -y install {{ item }}
   with_items: "{{ min_packages[ 'fedora_yum' ] }}"
   when: fedora_release.rc == 0 and fedora_version < fedora_version_uses_dnf
+  register: python2_install_yum
 
 # Fedora 23 and higher use DNF ---------------------------
 
@@ -29,3 +30,9 @@
   raw: dnf -y install {{ item }}
   with_items: "{{ min_packages[ 'fedora_dnf' ] }}"
   when: fedora_release.rc == 0 and fedora_version >= fedora_version_uses_dnf
+  register: python2_install_dnf
+
+# record the fact that python2 is installed
+
+- set_fact:
+    python2_installed:    True

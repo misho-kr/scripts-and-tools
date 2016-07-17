@@ -6,7 +6,14 @@
   register: python2_test
   ignore_errors: true
 
+# record the result of testing for python2
+
+- set_fact:
+    python2_installed:    "{{ python2_test.rc == 0 }}"
+
 # test for Fedora and do the installation is positive
 
 - include: install_fedora.yml
-  when: python2_test.rc != 0
+  when: not python2_installed
+
+- debug: msg="python2 is installed = {{ python2_installed }}"
