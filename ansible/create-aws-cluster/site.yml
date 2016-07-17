@@ -19,6 +19,15 @@
     - provision-cloud
 
 # ---------------------------------------------------------------------
+#  Optional: make sure Python 2 is available in the Virtual Machines
+# ---------------------------------------------------------------------
+
+- hosts: cloud
+  gather_facts: false
+  roles:
+    - min-install
+
+# ---------------------------------------------------------------------
 #  Test connectivity to Virtual Machines
 # ---------------------------------------------------------------------
 
