@@ -1,6 +1,6 @@
 ---
 # ---------------------------------------------------------------------
-#  Provision Virtual Machine and deploy required software
+#  Provision Virtual Machine and deploy development software
 # ---------------------------------------------------------------------
 
 - hosts: localhost
@@ -28,16 +28,17 @@
     - min-install
 
 # ---------------------------------------------------------------------
-#  Test connectivity to Virtual Machines
+#  Deploy software to Virtual Machines
 # ---------------------------------------------------------------------
 
 - hosts: cloud
-  tasks:
-    - ping:
 
-# ---------------------------------------------------------------------
-#  Deploy software to Virtual Machines ... TBC
-# ---------------------------------------------------------------------
+  roles:
+
+#    - { role: dev-env,    tags: [cpp, ruby]}
+
+    - { role: cpp-dev,    tag: cpp  }
+#    - { role: ruby-dev,   tag: ruby }
 
 # ---------------------------------------------------------------------
 # eof
