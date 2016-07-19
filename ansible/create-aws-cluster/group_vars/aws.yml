@@ -11,8 +11,8 @@ aws_region:                 us-west-2
 aws_keypair:                "Misho's public key"
 aws_vpc_subnet:             subnet-c8b90aac
 
-# Fedora-Cloud-Base-24-20160622.n.0.x86_64-us-west-2-HVM-standard-0
-ec2_image:                  ami-097abe69
+# Fedora-Cloud-Base-24-20160718.0.x86_64-us-west-2-HVM-standard-0 - ami-f1b17c91
+ec2_image:                  ami-f1b17c91
 ec2_user:                   fedora
 ec2_security_group:         default
 ec2_instance_type:          t2.micro

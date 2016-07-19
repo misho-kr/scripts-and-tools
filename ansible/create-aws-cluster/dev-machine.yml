@@ -22,23 +22,21 @@
 #  Optional: make sure Python 2 is available on the Virtual Machines
 # ---------------------------------------------------------------------
 
-- hosts: cloud
-  gather_facts: false
-  roles:
-    - min-install
+# - hosts: cloud
+#   gather_facts: false
+#   roles:
+#     - min-install
 
 # ---------------------------------------------------------------------
 #  Deploy software to Virtual Machines
 # ---------------------------------------------------------------------
 
 - hosts: cloud
-
   roles:
 
-#    - { role: dev-env,    tags: [cpp, ruby]}
-
-    - { role: cpp-dev,    tag: cpp  }
-#    - { role: ruby-dev,   tag: ruby }
+    # - { role: sublime-text,   tag: sublime }
+    # - { role: cpp-dev,        tag: cpp     }
+    - { role: ruby-dev,       tag: ruby }
 
 # ---------------------------------------------------------------------
 # eof
