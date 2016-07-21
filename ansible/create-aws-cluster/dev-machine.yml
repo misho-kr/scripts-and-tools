@@ -9,7 +9,7 @@
 
   vars:
     cloud:      aws
-    vm_count:   1
+    vm_count:   3
     vm_tags:
         name:           "Development machine"
         purpose:        "Work on home assignments"
@@ -22,10 +22,10 @@
 #  Optional: make sure Python 2 is available on the Virtual Machines
 # ---------------------------------------------------------------------
 
-# - hosts: cloud
-#   gather_facts: false
-#   roles:
-#     - min-install
+- hosts: cloud
+  gather_facts: false
+  roles:
+    - min-install
 
 # ---------------------------------------------------------------------
 #  Deploy software to Virtual Machines
@@ -34,9 +34,9 @@
 - hosts: cloud
   roles:
 
-    # - { role: sublime-text,   tag: sublime }
-    # - { role: cpp-dev,        tag: cpp     }
-    - { role: ruby-dev,       tag: ruby }
+    - { role: sublime-text,   when: install == "sublime" }
+    - { role: cpp-dev,        when: install == "cpp"     }
+    - { role: ruby-dev,       when: install == "ruby"    }
 
 # ---------------------------------------------------------------------
 # eof

@@ -25,3 +25,10 @@ ec2_new_instance_name_attr:     private_ip
 
 aws_ec2_create_timeout:     300         # seconds
 aws_ec2_startup_timeout:    300         # seconds
+
+aws_ec2_runnable_states:
+    - initializing
+    - starting
+    - running
+    - stopping
+    - stopped

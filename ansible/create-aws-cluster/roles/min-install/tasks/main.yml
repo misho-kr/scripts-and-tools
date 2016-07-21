@@ -16,4 +16,4 @@
 - include: install_fedora.yml
   when: not python2_installed
 
-- debug: msg="python2 is installed = {{ python2_installed }}"
+# - debug: msg="python2 is installed = {{ python2_installed }}"

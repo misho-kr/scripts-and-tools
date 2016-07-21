@@ -14,6 +14,7 @@ def make_ec2_tag_filters(*vm_tags):
     # return { x:x for x in range(10) }
     return { "tag:"+k:v for k,v in all_tags }
 
+
 class FilterModule(object):
     '''Ansible helper jinja2 filters'''
 
