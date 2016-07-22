@@ -1,6 +1,12 @@
 Make Virtual Machines in the cloud
 ==================================
 
+## Tombstone
+
+This playbook was moved into dedicated repository -- [Ansible Cloud Playbooks](https://github.com/misho-kr/ansible-cloud-playbooks). All future work will continue there.
+
+This folder will bve removed on ar after: 2018/1/1
+
 [Ansible playbook](https://docs.ansible.com/playbooks.html) to automate the creation of virtual machines on public clouds. No need for vendor-specific user interfaces or multiple command-line tools.
 
 I am sure there are other solutions for that, like [Teraform](https://www.terraform.io). This one is implemented with [Ansible cloud modules](http://docs.ansible.com/ansible/list_of_cloud_modules.html).
