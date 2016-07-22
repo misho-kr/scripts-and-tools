@@ -12,3 +12,6 @@ vm_wait_for_port:       22
 local_homedir:              "{{ lookup('env','HOME') }}"
 remote_homedir:             "{{ ansible_env['HOME'] }}"
 current_dir:                "{{ lookup('env','PWD') }}"
+
+from_cache:                 True
+download_cache_dir:         "{{ current_dir }}/download.cache"

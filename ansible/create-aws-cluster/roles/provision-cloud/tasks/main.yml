@@ -1,7 +1,7 @@
 ---
 # Provision Virtul Machine(s) with chosen cloud provider
 
-- include_vars: "group_vars/{{ cloud | default('nocloud') }}.yml"
+- include_vars: "vars/{{ cloud | default('nocloud') }}.yml"
 
 # cloud-specific tasks to provision VMs -----------------------
 
