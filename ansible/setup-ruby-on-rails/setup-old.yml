@@ -1,0 +1,153 @@
+---
+# --------------------------------------------------------------------------
+#      Ansible playbook to set up Ruby on Rails development environment
+# --------------------------------------------------------------------------
+
+- hosts: ruby-dev
+  gather_facts: no
+
+  vars:
+
+    do_min_install:	False
+    packages:           
+      python
+      python2-dnf
+      yum-utils
+      libselinux-python
+
+  tasks:
+
+    - name: install minimum required packages with CLI command
+      sudo: yes
+      raw: dnf -y install {{ packages }}
+      when: do_min_install | bool
+
+- hosts: ruby-dev
+
+  vars:
+    prerequisites:
+      - git
+      - gitk
+      - git-gui
+      - nodejs
+    build_tools:
+      - gcc 
+      - gcc-c++ 
+      - libpqxx-devel
+      - openssl-devel
+      - readline-devel
+      - sqlite-devel
+      - zlib-devel
+      - make
+      - patch
+      - bzip2
+    extra:
+      - emacs-nox
+      - zip
+      - unzip
+
+    rbenv_repo:			git://github.com/sstephenson/rbenv.git
+    rbenv_install_repo:		git://github.com/sstephenson/ruby-build.git
+
+    phantom_js_url:		https://bitbucket.org/ariya/phantomjs/downloads
+    phantom_js_name:		phantomjs-1.9.8-linux-x86_64
+    phantom_js_dest:		/usr/local/share
+    phantom_js_install_dest:	/usr/local/bin
+    phantom_js_download_dest:	/tmp
+
+    sublime_text_url:		http://c758482.r82.cf2.rackcdn.com
+    sublime_text_name:		"Sublime%20Text%202.0.2%20x64"
+    sublime_text_dest:		/usr/local
+    sublime_text_extract_dir:	"Sublime\ Text\ 2"
+    sublime_text_dir:		SublimeText2
+    sublime_text_download_dest:	/tmp
+
+    bashrc_addons_sublime_text:
+      - export PATH=\"$PATH:{{ sublime_text_dest }}/{{ sublime_text_dir }}\"
+
+    bashrc_addons:
+      - export RECIPEPUPPY_HOSTPORT=www.recipepuppy.com:80
+      - export PATH=\"$HOME/.rbenv/bin:$PATH\"
+      - export PATH=\"$HOME/.rbenv/plugins/ruby-build/bin:$PATH\"
+      - eval \"$(rbenv init -)\"
+
+    ruby_version:      2.2.2
+    rails_version:     4.2.3
+
+  tasks:
+
+    - name: update all packages
+      sudo: yes
+      dnf:  name=* state=latest
+
+    - name: install prerequisite, build tools and extra packages
+      sudo: yes
+      dnf: name="{{ item }}" state=latest
+      with_items: prerequisites + build_tools + extra
+
+    - name: clone the rbenv git repo into ~/.rbenv
+      git: repo={{ rbenv_repo }} dest="{{ ansible_user_dir }}/.rbenv" accept_hostkey=yes
+
+    - name: add the install command to rbenv
+      git: repo={{ rbenv_install_repo }} dest="{{ ansible_user_dir }}/.rbenv/plugins/ruby-build" accept_hostkey=yes
+
+    - name: update bashrc file (rbenv)
+      lineinfile: dest="{{ ansible_user_dir }}/.bashrc" line="{{ item }}" state=present insertafter=EOF
+      with_items: bashrc_addons
+
+    - name: install a Ruby version (could be others)
+      command: rbenv install -v {{ ruby_version }}
+
+    - name: set the global version of Ruby to use
+      command: rbenv global {{ ruby_version }}
+
+    - name: gems should not generate local documentation (and eat space and time)
+      lineinfile: dest="{{ ansible_user_dir }}/.gemrc" line="gem{{':'}} --no-document" state=present create=yes
+
+    - name: install bundler
+      command: gem install bundler
+
+    - name: install Rails, this step will take a ~5min to complete (as it warns)
+      command: gem install rails -v {{ rails_version }}
+
+    - name: install shims for newly installed Ruby gems that provide commands
+      command: rbenv rehash
+
+    - name: download PhantomJS archive file
+      get_url: url="{{ phantom_js_url }}/{{ phantom_js_name }}.tar.bz2" dest={{ phantom_js_download_dest }}
+
+    - name: extract PhantomJS archive file
+      sudo: yes
+      unarchive: src="{{ phantom_js_download_dest }}/{{ phantom_js_name }}.tar.bz2" dest={{ phantom_js_dest }} copy=no creates="{{ phantom_js_dest }}/{{ phantom_js_name }}/bin/phantomjs"
+
+    - name: install PhantomJS for headless testing
+      sudo: yes
+      file: src="{{ phantom_js_dest }}/{{ phantom_js_name }}/bin/phantomjs" dest="{{ phantom_js_install_dest }}/phantomjs" state=link
+
+    - name: delete downloaded PhantomJS archive file
+      file: name="{{ phantom_js_download_dest }}/{{ phantom_js_name }}.tar.bz2" state=absent
+
+    - name: download SublimeText
+      get_url: url="{{ sublime_text_url }}/{{ sublime_text_name }}.tar.bz2" dest={{ sublime_text_download_dest }}
+
+    - name: extract SublimeText archive file
+      sudo: yes
+      unarchive: src="{{ sublime_text_download_dest }}/{{ sublime_text_name }}.tar.bz2" dest={{ sublime_text_dest }} copy=no creates="{{ sublime_text_dest }}/{{ sublime_text_extract_dir }}"
+
+    - name: remove stale SublimeText directory (only of the directory will have to be renamed)
+      sudo: yes
+      file: path="{{ sublime_text_dest }}/{{ sublime_text_dir }}" state=absent
+      when: sublime_text_extract_dir != sublime_text_dir
+
+    - name: rename SublimeText directory (to avoid complications with paths that contain spaces)
+      sudo: yes
+      command: mv "{{ sublime_text_dest }}/{{ sublime_text_extract_dir }}" "{{ sublime_text_dest }}/{{ sublime_text_dir }}"
+      when: sublime_text_extract_dir != sublime_text_dir
+      
+    - name: update bashrc file (SublimeText2)
+      lineinfile: dest="{{ ansible_user_dir }}/.bashrc" line="{{ item }}" state=present insertafter=EOF
+      with_items: bashrc_addons_sublime_text
+
+    - name: delete downloaded SublimeText archive file
+      file: path="{{ sublime_text_download_dest }}/{{ sublime_text_name }}.tar.bz2" state=absent
+
